@@ -1,0 +1,1784 @@
+import { useState, useRef, useEffect } from 'react';
+import { getUniversityDetailUrl } from '../utils/universityUtils';
+import {
+  ArrowLeft, GraduationCap, Users, Clock, Award, DollarSign,
+  FileText, Globe, TrendingUp, Shield, ChevronDown, ChevronUp,
+  MapPin, Star, Calendar, CheckCircle, Phone, Mail, MessageCircle,
+  Building2, BookOpen, Briefcase, Code, Database, Brain, Palette,
+  Utensils, Hotel, TrendingUp as Finance, Home, Menu, X, Euro, ArrowRight
+} from 'lucide-react';
+
+type AccordionSection = 'universities' | 'courses' | 'intakes' | 'tuition-fees' | 'cost-living' | 'scholarships' | 'visa-process' | 'documents' | 'admission-process' | 'faq' | null;
+
+export function FrancePage() {
+  const [activeAccordion, setActiveAccordion] = useState<AccordionSection>(null);
+  const [showAllUniversities, setShowAllUniversities] = useState(false);
+  const [showAllCourses, setShowAllCourses] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
+  const servicesRef = useRef<HTMLDivElement>(null);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    course: '',
+    intake: '',
+    message: ''
+  });
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (servicesRef.current && !servicesRef.current.contains(event.target as Node)) {
+        setIsServicesOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const offset = 100;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+
+      if (activeAccordion !== sectionId as AccordionSection) {
+        setActiveAccordion(sectionId as AccordionSection);
+      }
+    }
+  };
+
+  const toggleAccordion = (section: AccordionSection) => {
+    if (activeAccordion === section) {
+      setActiveAccordion(null);
+    } else {
+      setActiveAccordion(section);
+      setTimeout(() => {
+        const element = document.getElementById(section);
+        if (element) {
+          const offset = 100;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - offset;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+      }, 100);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Form submitted
+    alert('Thank you for your enquiry! We will contact you soon.');
+    setFormData({ name: '', email: '', phone: '', course: '', intake: '', message: '' });
+    setIsEnquiryOpen(false);
+  };
+
+  const handleGoHome = () => {
+    window.location.hash = 'home';
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#0A2472] via-[#0E1B4D] to-[#0A2472]">
+      {/* Sticky Navbar */}
+      <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-lg border-b border-[#DCE3F1] shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            {/* Logo */}
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-[#001489] to-[#ED2939] rounded-xl flex items-center justify-center shadow-lg">
+                <GraduationCap className="w-7 h-7 text-white" />
+              </div>
+              <span className="text-2xl font-bold bg-gradient-to-r from-[#356AE6] to-[#2447B8] bg-clip-text text-transparent">
+                Study in France
+              </span>
+            </div>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-8">
+              <button onClick={handleGoHome} className="text-[#2b2d72] hover:text-[#2b2d72] font-medium transition-colors flex items-center gap-2">
+                <Home className="w-4 h-4" />
+                Home
+              </button>
+              <div className="relative" ref={servicesRef}>
+                <button
+                  onClick={() => setIsServicesOpen(!isServicesOpen)}
+                  className="flex items-center gap-1 text-[#2b2d72] hover:text-[#2b2d72] font-medium transition-colors"
+                >
+                  Services
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isServicesOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {isServicesOpen && (
+                  <div className="absolute top-full mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-[#DCE3F1] py-2 z-50">
+                    {[
+                      { label: 'Popular Universities', id: 'universities', icon: Building2 },
+                      { label: 'Popular Courses', id: 'courses', icon: BookOpen },
+                      { label: 'Intakes', id: 'intakes', icon: Calendar },
+                      { label: 'Tuition Fees', id: 'tuition-fees', icon: DollarSign },
+                      { label: 'Cost of Living', id: 'cost-living', icon: MapPin },
+                      { label: 'Scholarships', id: 'scholarships', icon: Award },
+                      { label: 'Visa Process', id: 'visa-process', icon: FileText },
+                      { label: 'Document Checklist', id: 'documents', icon: FileText },
+                      { label: 'Admission Process', id: 'admission-process', icon: CheckCircle },
+                      { label: 'FAQ', id: 'faq', icon: MessageCircle }
+                    ].map((item, index) => (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          scrollToSection(item.id);
+                          setIsServicesOpen(false);
+                        }}
+                        className="w-full px-4 py-3 text-left hover:bg-gradient-to-r hover:from-[#EEF4FF] hover:to-[#DBEAFE] transition-all flex items-center gap-3 group"
+                      >
+                        <item.icon className="w-5 h-5 text-[#2b2d72] group-hover:scale-110 transition-transform" />
+                        <span className="text-[#2b2d72] group-hover:text-[#2b2d72] font-medium">{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={() => scrollToSection('contact')}
+                className="px-6 py-2.5 bg-gradient-to-r from-[#356AE6] to-[#2447B8] text-white rounded-full font-medium hover:shadow-xl transition-all hover:-translate-y-1"
+              >
+                Contact Us
+              </button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="lg:hidden text-[#2b2d72] hover:text-[#2b2d72] transition-colors"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+
+          {/* Mobile Menu */}
+          {isMobileMenuOpen && (
+            <div className="lg:hidden py-4 border-t border-[#DCE3F1]">
+              <div className="flex flex-col gap-2">
+                <button onClick={handleGoHome} className="px-4 py-3 text-left hover:bg-[#EEF4FF] rounded-lg transition-all flex items-center gap-2">
+                  <Home className="w-4 h-4" />
+                  <span className="font-medium">Home</span>
+                </button>
+                {[
+                  { label: 'Popular Universities', id: 'universities', icon: Building2 },
+                  { label: 'Popular Courses', id: 'courses', icon: BookOpen },
+                  { label: 'Intakes', id: 'intakes', icon: Calendar },
+                  { label: 'Tuition Fees', id: 'tuition-fees', icon: DollarSign },
+                  { label: 'Cost of Living', id: 'cost-living', icon: MapPin },
+                  { label: 'Scholarships', id: 'scholarships', icon: Award },
+                  { label: 'Visa Process', id: 'visa-process', icon: FileText },
+                  { label: 'Document Checklist', id: 'documents', icon: FileText },
+                  { label: 'Admission Process', id: 'admission-process', icon: CheckCircle },
+                  { label: 'FAQ', id: 'faq', icon: MessageCircle }
+                ].map((item, index) => (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      scrollToSection(item.id);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="px-4 py-3 text-left hover:bg-[#EEF4FF] rounded-lg transition-all flex items-center gap-2"
+                  >
+                    <item.icon className="w-4 h-4" />
+                    <span className="font-medium">{item.label}</span>
+                  </button>
+                ))}
+                <button
+                  onClick={() => {
+                    scrollToSection('contact');
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="px-4 py-3 text-left bg-gradient-to-r from-[#356AE6] to-[#2447B8] text-white rounded-lg font-medium"
+                >
+                  Contact Us
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative py-16 md:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1920&h=1280&fit=crop&auto=format&q=85')] bg-cover bg-center opacity-10"></div>
+
+        <div className="relative max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-14 lg:gap-20 items-center">
+            {/* Left Content */}
+            <div className="order-2 lg:order-1">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-3 px-5 py-3 bg-gradient-to-r from-[#EEF4FF] to-[#DBEAFE] border-2 border-[#356AE6]/30 rounded-full shadow-sm hover:shadow-lg hover:scale-105 transition-all duration-300 mb-6 md:mb-7">
+                <img
+                  src="https://flagcdn.com/fr.svg"
+                  alt="France Flag"
+                  className="w-8 h-6 object-cover rounded shadow-sm"
+                />
+                <span className="text-sm font-semibold bg-gradient-to-r from-[#356AE6] to-[#2447B8] bg-clip-text text-transparent">
+                  Europe's Cultural Capital
+                </span>
+              </div>
+
+              {/* Heading with Flag */}
+              <div className="flex items-center gap-4 mb-6 md:mb-7">
+                <img
+                  src="https://flagcdn.com/w320/fr.png"
+                  alt="France Flag"
+                  className="w-16 h-11 object-cover rounded-md shadow-lg border-2 border-white/50"
+                />
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
+                  <span className="bg-gradient-to-r from-[#001489] via-[#FFFFFF] to-[#ED2939] bg-clip-text text-transparent">
+                    Study in France
+                  </span>
+                </h1>
+              </div>
+
+              <p className="text-base sm:text-lg md:text-xl text-white/90 leading-relaxed mb-7 md:mb-8 max-w-xl">
+                Experience world-renowned education in fashion, culinary arts, and business. Study in the heart of Europe with affordable tuition and rich cultural heritage.
+              </p>
+
+              {/* Statistics Cards */}
+              <div className="grid grid-cols-3 gap-3 sm:gap-4 md:gap-5 mb-7 md:mb-8">
+                <div className="bg-white/90 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-[#DCE3F1] group">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#356AE6] to-[#2447B8] bg-clip-text text-transparent mb-1 group-hover:scale-110 transition-transform">
+                    3,500+
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-600 font-medium leading-tight">Programs</p>
+                </div>
+
+                <div className="bg-white/90 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-[#DCE3F1] group">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#356AE6] to-[#2447B8] bg-clip-text text-transparent mb-1 group-hover:scale-110 transition-transform">
+                    €170
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-600 font-medium leading-tight">Public Tuition</p>
+                </div>
+
+                <div className="bg-white/90 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-[#DCE3F1] group">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#356AE6] to-[#2447B8] bg-clip-text text-transparent mb-1 group-hover:scale-110 transition-transform">
+                    2 Years
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-600 font-medium leading-tight">Post-Study Work</p>
+                </div>
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
+                <button
+                  onClick={() => setIsEnquiryOpen(true)}
+                  className="group w-full sm:w-auto px-7 sm:px-8 md:px-9 py-3.5 sm:py-4 bg-gradient-to-r from-[#356AE6] to-[#2447B8] text-white rounded-full font-semibold shadow-lg hover:shadow-2xl hover:shadow-[rgba(53,106,230,0.12)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 flex items-center justify-center gap-2.5"
+                >
+                  <Mail className="w-5 h-5 flex-shrink-0" />
+                  <span className="whitespace-nowrap">Send Enquiry</span>
+                  <ChevronDown className="w-4 h-4 rotate-[-90deg] group-hover:translate-x-1 transition-transform flex-shrink-0" />
+                </button>
+
+                <a
+                  href="https://wa.me/917299005577"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group w-full sm:w-auto px-7 sm:px-8 md:px-9 py-3.5 sm:py-4 bg-white/10 backdrop-blur-md text-white rounded-full font-semibold border-2 border-white/30 hover:bg-white/20 hover:border-white/50 transition-all duration-300 hover:-translate-y-1 hover:scale-105 flex items-center justify-center gap-2.5"
+                >
+                  <MessageCircle className="w-5 h-5 flex-shrink-0" />
+                  <span className="whitespace-nowrap">Chat on WhatsApp</span>
+                  <ChevronDown className="w-4 h-4 rotate-[-90deg] group-hover:translate-x-1 transition-transform flex-shrink-0" />
+                </a>
+              </div>
+            </div>
+
+            {/* Right Image */}
+            <div className="order-1 lg:order-2 relative">
+              <div className="relative aspect-[4/3] lg:aspect-auto lg:h-[550px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl hover:shadow-[0px_20px_60px_rgba(53,106,230,0.4)] transition-all duration-500 hover:-translate-y-2 border-4 border-white/60 group">
+                <img
+                  src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1200&h=800&fit=crop&auto=format&q=85"
+                  alt="Study in France - Eiffel Tower Paris"
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Study in France */}
+      <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#EEF4FF] to-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-[#356AE6] to-[#2447B8] bg-clip-text text-transparent">
+              Why Study in France?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Discover why France is a top destination for international students
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {[
+              {
+                icon: DollarSign,
+                title: 'Affordable Education',
+                description: 'Public universities charge only €170-650 per year'
+              },
+              {
+                icon: Globe,
+                title: 'World-Class Universities',
+                description: 'Home to top business and culinary schools'
+              },
+              {
+                icon: Palette,
+                title: 'Fashion & Arts Hub',
+                description: 'Global capital of fashion, art, and design'
+              },
+              {
+                icon: Users,
+                title: 'Multicultural Experience',
+                description: 'Diverse international student community'
+              },
+              {
+                icon: Briefcase,
+                title: 'Career Opportunities',
+                description: '2-year post-study work permit for graduates'
+              },
+              {
+                icon: MapPin,
+                title: 'Central European Location',
+                description: 'Easy access to explore all of Europe'
+              }
+            ].map((item, index) => (
+              <div
+                key={index}
+                className="group bg-white/50 hover:bg-gradient-to-br hover:from-[#EEF4FF] hover:to-[#DBEAFE] p-5 sm:p-6 rounded-2xl transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-transparent hover:border-[#356AE6]/20"
+              >
+                <div className="w-12 h-12 sm:w-14 sm:h-14 mb-3 sm:mb-4 bg-gradient-to-br from-[#356AE6] to-[#2447B8] rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <item.icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold text-[#2b2d72] mb-2 sm:mb-3">{item.title}</h3>
+                <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Accordion Sections */}
+      <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#EEF4FF] to-white">
+        <div className="max-w-5xl mx-auto space-y-6">
+          {/* Popular Universities */}
+          <div id="universities" className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-[#DCE3F1] scroll-mt-24">
+            <button
+              onClick={() => toggleAccordion('universities')}
+              className="w-full px-8 py-6 flex justify-between items-center hover:bg-gradient-to-r hover:from-[#EEF4FF] hover:to-[#DBEAFE] transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#356AE6] to-[#2447B8] rounded-xl flex items-center justify-center">
+                  <Building2 className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#2b2d72]">Popular Universities</h3>
+              </div>
+              {activeAccordion === 'universities' ? (
+                <ChevronUp className="w-6 h-6 text-[#2b2d72]" />
+              ) : (
+                <ChevronDown className="w-6 h-6 text-gray-600" />
+              )}
+            </button>
+
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                activeAccordion === 'universities'
+                  ? 'max-h-[3000px] opacity-100'
+                  : 'max-h-0 opacity-0 overflow-hidden'
+              }`}
+            >
+              <div className="px-8 pb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[
+                    {
+                      name: 'Sorbonne University',
+                      ranking: '#60 QS World Ranking 2026',
+                      programs: 'Arts, Humanities, Science, Medicine',
+                      url: 'https://www.google.com/search?q=Sorbonne+University+admission',
+                      image: 'https://images.unsplash.com/photo-1562774053-701939374585?w=600&h=400&fit=crop&auto=format&q=85'
+                    },
+                    {
+                      name: 'École Polytechnique',
+                      ranking: 'Top Engineering School',
+                      programs: 'Engineering, Science, Technology',
+                      url: 'https://www.google.com/search?q=Ecole+Polytechnique+admission',
+                      image: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&h=400&fit=crop&auto=format&q=85'
+                    },
+                    {
+                      name: 'HEC Paris',
+                      ranking: '#1 Business School in France',
+                      programs: 'MBA, Business Management, Finance',
+                      url: 'https://www.google.com/search?q=HEC+Paris+admission',
+                      image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=400&fit=crop&auto=format&q=85'
+                    },
+                    {
+                      name: 'Sciences Po',
+                      ranking: 'Top Political Science School',
+                      programs: 'Political Science, International Relations',
+                      url: 'https://www.google.com/search?q=Sciences+Po+admission',
+                      image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&h=400&fit=crop&auto=format&q=85'
+                    },
+                    ...(showAllUniversities ? [
+                      {
+                        name: 'PSL University',
+                        ranking: '#24 QS World Ranking 2026',
+                        programs: 'Arts, Science, Engineering',
+                        url: 'https://www.google.com/search?q=PSL+University+admission',
+                        image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=400&fit=crop&auto=format&q=85'
+                      },
+                      {
+                        name: 'Le Cordon Bleu',
+                        ranking: 'World-Leading Culinary School',
+                        programs: 'Culinary Arts, Hospitality Management',
+                        url: 'https://www.google.com/search?q=Le+Cordon+Bleu+Paris+admission',
+                        image: 'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=600&h=400&fit=crop&auto=format&q=85'
+                      }
+                    ] : [])
+                  ].map((university, index) => (
+                    <a key={index} href={getUniversityDetailUrl(university.name)} className="group bg-gradient-to-br from-white to-[#EEF4FF] rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-[#356AE6]">
+                      <div className="relative h-48 overflow-hidden">
+                        <img
+                          src={university.image}
+                          alt={university.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                      </div>
+                      <div className="p-6">
+                        <h4 className="text-xl font-bold text-[#2b2d72] mb-2">{university.name}</h4>
+                        <p className="text-sm text-[#2b2d72] font-semibold mb-3">{university.ranking}</p>
+                        <p className="text-sm text-gray-600 mb-4">{university.programs}</p>
+                        <div className="text-[#2b2d72] hover:text-[#2b2d72] font-medium text-sm flex items-center gap-2 transition-colors">
+                          Learn More
+                          <ChevronDown className="w-4 h-4 rotate-[-90deg]" />
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setShowAllUniversities(!showAllUniversities)}
+                  className="mt-6 mx-auto block px-8 py-3 bg-gradient-to-r from-[#356AE6] to-[#2447B8] text-white rounded-full font-medium hover:shadow-xl transition-all hover:-translate-y-1"
+                >
+                  {showAllUniversities ? 'Show Less' : 'Show More Universities'}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Popular Courses */}
+          <div id="courses" className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-[#DCE3F1] scroll-mt-24">
+            <button
+              onClick={() => toggleAccordion('courses')}
+              className="w-full px-8 py-6 flex justify-between items-center hover:bg-gradient-to-r hover:from-[#EEF4FF] hover:to-[#DBEAFE] transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#3B82F6] to-[#2563EB] rounded-xl flex items-center justify-center">
+                  <BookOpen className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#2b2d72]">Popular Courses</h3>
+              </div>
+              {activeAccordion === 'courses' ? (
+                <ChevronUp className="w-6 h-6 text-[#2b2d72]" />
+              ) : (
+                <ChevronDown className="w-6 h-6 text-gray-600" />
+              )}
+            </button>
+
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                activeAccordion === 'courses'
+                  ? 'max-h-[3000px] opacity-100'
+                  : 'max-h-0 opacity-0 overflow-hidden'
+              }`}
+            >
+              <div className="px-8 pb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[
+                    { name: 'Business Management', icon: Briefcase, color: 'from-[#3B82F6] to-[#2563EB]', url: 'https://www.google.com/search?q=Business+Management+France' },
+                    { name: 'Fashion Designing', icon: Palette, color: 'from-[#EC4899] to-[#DB2777]', url: 'https://www.google.com/search?q=Fashion+Design+France' },
+                    { name: 'Culinary Arts', icon: Utensils, color: 'from-[#F59E0B] to-[#D97706]', url: 'https://www.google.com/search?q=Culinary+Arts+France' },
+                    { name: 'Engineering', icon: Building2, color: 'from-[#8B5CF6] to-[#7C3AED]', url: 'https://www.google.com/search?q=Engineering+France' },
+                    { name: 'Data Science', icon: Database, color: 'from-[#10B981] to-[#059669]', url: 'https://www.google.com/search?q=Data+Science+France' },
+                    { name: 'Artificial Intelligence', icon: Brain, color: 'from-[#06B6D4] to-[#0891B2]', url: 'https://www.google.com/search?q=AI+France' },
+                    { name: 'Hospitality', icon: Hotel, color: 'from-[#14B8A6] to-[#0D9488]', url: 'https://www.google.com/search?q=Hospitality+France' },
+                    { name: 'Finance', icon: Finance, color: 'from-[#EF4444] to-[#DC2626]', url: 'https://www.google.com/search?q=Finance+France' },
+                    { name: 'Arts & Design', icon: Palette, color: 'from-[#A855F7] to-[#9333EA]', url: 'https://www.google.com/search?q=Arts+Design+France' }
+                  ].slice(0, showAllCourses ? 9 : 6).map((course, index) => (
+                    <a
+                      key={index}
+                      href={course.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group bg-white hover:bg-gradient-to-br hover:from-[#F8FAFC] hover:to-[#F1F5F9] p-6 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-[#356AE6]"
+                    >
+                      <div className={`w-14 h-14 mb-4 bg-gradient-to-br ${course.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                        <course.icon className="w-7 h-7 text-white" />
+                      </div>
+                      <h4 className="text-lg font-bold text-[#2b2d72] mb-2">{course.name}</h4>
+                      <span className="text-[#2b2d72] text-sm flex items-center gap-1">
+                        Explore
+                        <ChevronDown className="w-4 h-4 rotate-[-90deg]" />
+                      </span>
+                    </a>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setShowAllCourses(!showAllCourses)}
+                  className="mt-6 mx-auto block px-8 py-3 bg-gradient-to-r from-[#356AE6] to-[#2447B8] text-white rounded-full font-medium hover:shadow-xl transition-all hover:-translate-y-1"
+                >
+                  {showAllCourses ? 'Show Less' : 'Show More Courses'}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Intakes */}
+          <div id="intakes" className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-[#DCE3F1] scroll-mt-24">
+            <button
+              onClick={() => toggleAccordion('intakes')}
+              className="w-full px-8 py-6 flex justify-between items-center hover:bg-gradient-to-r hover:from-[#EEF4FF] hover:to-[#DBEAFE] transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-xl flex items-center justify-center">
+                  <Calendar className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#2b2d72]">Intake Calendar</h3>
+              </div>
+              {activeAccordion === 'intakes' ? (
+                <ChevronUp className="w-6 h-6 text-[#2b2d72]" />
+              ) : (
+                <ChevronDown className="w-6 h-6 text-gray-600" />
+              )}
+            </button>
+
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                activeAccordion === 'intakes'
+                  ? 'max-h-[3000px] opacity-100'
+                  : 'max-h-0 opacity-0 overflow-hidden'
+              }`}
+            >
+              <div className="px-8 pb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-gradient-to-br from-[#EEF4FF] to-[#DBEAFE] p-6 rounded-2xl border-2 border-[#356AE6]/30 shadow-lg">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-lg flex items-center justify-center">
+                        <Calendar className="w-5 h-5 text-white" />
+                      </div>
+                      <h4 className="text-xl font-bold text-[#2b2d72]">Fall Intake</h4>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 font-medium">Start Month:</span>
+                        <span className="text-[#2b2d72] font-bold">September</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 font-medium">Application Opens:</span>
+                        <span className="text-[#2b2d72] font-bold">November</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 font-medium">Deadline:</span>
+                        <span className="text-[#2b2d72] font-bold">March - June</span>
+                      </div>
+                      <div className="mt-4 p-3 bg-white/70 rounded-lg">
+                        <p className="text-sm text-gray-600">Main intake with most programs available. Best for business, engineering, and arts courses.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-[#FEF3C7] to-[#FDE68A] p-6 rounded-2xl border-2 border-[#F59E0B]/30 shadow-lg">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-gradient-to-br from-[#F59E0B] to-[#D97706] rounded-lg flex items-center justify-center">
+                        <Calendar className="w-5 h-5 text-white" />
+                      </div>
+                      <h4 className="text-xl font-bold text-[#2b2d72]">Spring Intake</h4>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 font-medium">Start Month:</span>
+                        <span className="text-[#2b2d72] font-bold">January/February</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 font-medium">Application Opens:</span>
+                        <span className="text-[#2b2d72] font-bold">September</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 font-medium">Deadline:</span>
+                        <span className="text-[#2b2d72] font-bold">October - November</span>
+                      </div>
+                      <div className="mt-4 p-3 bg-white/70 rounded-lg">
+                        <p className="text-sm text-gray-600">Limited programs. Suitable for Master's courses and some specialized programs.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 p-6 bg-white/50 rounded-2xl border border-[#DCE3F1]">
+                  <h5 className="text-lg font-bold text-[#2b2d72] mb-3 flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-[#2b2d72]" />
+                    Important Timeline Notes
+                  </h5>
+                  <ul className="space-y-2 text-gray-600">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-[#10B981] flex-shrink-0 mt-0.5" />
+                      <span>Campus France application process takes 2-4 months</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-[#10B981] flex-shrink-0 mt-0.5" />
+                      <span>Visa processing takes 2-3 weeks after Campus France approval</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-[#10B981] flex-shrink-0 mt-0.5" />
+                      <span>Apply at least 6 months before your intended start date</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-[#10B981] flex-shrink-0 mt-0.5" />
+                      <span>Early applications have better chances for competitive programs</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Tuition Fees */}
+          <div id="tuition-fees" className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-[#DCE3F1] scroll-mt-24">
+            <button
+              onClick={() => toggleAccordion('tuition-fees')}
+              className="w-full px-8 py-6 flex justify-between items-center hover:bg-gradient-to-r hover:from-[#EEF4FF] hover:to-[#DBEAFE] transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#F59E0B] to-[#D97706] rounded-xl flex items-center justify-center">
+                  <Euro className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#2b2d72]">Tuition Fees</h3>
+              </div>
+              {activeAccordion === 'tuition-fees' ? (
+                <ChevronUp className="w-6 h-6 text-[#2b2d72]" />
+              ) : (
+                <ChevronDown className="w-6 h-6 text-gray-600" />
+              )}
+            </button>
+
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                activeAccordion === 'tuition-fees'
+                  ? 'max-h-[3000px] opacity-100'
+                  : 'max-h-0 opacity-0 overflow-hidden'
+              }`}
+            >
+              <div className="px-8 pb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-gradient-to-br from-[#DCFCE7] to-[#BBF7D0] p-6 rounded-2xl shadow-lg border-2 border-[#10B981]/30">
+                    <h4 className="text-xl font-bold text-[#2b2d72] mb-4">Public Universities</h4>
+                    <div className="space-y-3">
+                      <div className="bg-white/70 p-4 rounded-xl">
+                        <p className="text-sm text-gray-600 mb-1">Bachelor's Degree</p>
+                        <p className="text-2xl font-bold text-[#10B981]">€170 - €650</p>
+                        <p className="text-xs text-gray-600 mt-1">per year</p>
+                      </div>
+                      <div className="bg-white/70 p-4 rounded-xl">
+                        <p className="text-sm text-gray-600 mb-1">Master's Degree</p>
+                        <p className="text-2xl font-bold text-[#10B981]">€243 - €800</p>
+                        <p className="text-xs text-gray-600 mt-1">per year</p>
+                      </div>
+                      <div className="bg-white/70 p-4 rounded-xl">
+                        <p className="text-sm text-gray-600 mb-1">PhD Programs</p>
+                        <p className="text-2xl font-bold text-[#10B981]">€380</p>
+                        <p className="text-xs text-gray-600 mt-1">per year</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-[#FEF3C7] to-[#FDE68A] p-6 rounded-2xl shadow-lg border-2 border-[#F59E0B]/30">
+                    <h4 className="text-xl font-bold text-[#2b2d72] mb-4">Private Institutions</h4>
+                    <div className="space-y-3">
+                      <div className="bg-white/70 p-4 rounded-xl">
+                        <p className="text-sm text-gray-600 mb-1">Business Schools (MBA)</p>
+                        <p className="text-2xl font-bold text-[#F59E0B]">€3,000 - €20,000</p>
+                        <p className="text-xs text-gray-600 mt-1">per year</p>
+                      </div>
+                      <div className="bg-white/70 p-4 rounded-xl">
+                        <p className="text-sm text-gray-600 mb-1">Engineering Schools</p>
+                        <p className="text-2xl font-bold text-[#F59E0B]">€5,000 - €15,000</p>
+                        <p className="text-xs text-gray-600 mt-1">per year</p>
+                      </div>
+                      <div className="bg-white/70 p-4 rounded-xl">
+                        <p className="text-sm text-gray-600 mb-1">Fashion & Culinary Arts</p>
+                        <p className="text-2xl font-bold text-[#F59E0B]">€10,000 - €30,000</p>
+                        <p className="text-xs text-gray-600 mt-1">per year</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-white/50 p-4 rounded-xl border border-[#DCE3F1]">
+                    <h5 className="font-bold text-[#2b2d72] mb-2">Registration Fees</h5>
+                    <p className="text-sm text-gray-600">€50 - €150 (one-time)</p>
+                  </div>
+                  <div className="bg-white/50 p-4 rounded-xl border border-[#DCE3F1]">
+                    <h5 className="font-bold text-[#2b2d72] mb-2">Student Services</h5>
+                    <p className="text-sm text-gray-600">€100 per year (social security)</p>
+                  </div>
+                  <div className="bg-white/50 p-4 rounded-xl border border-[#DCE3F1]">
+                    <h5 className="font-bold text-[#2b2d72] mb-2">Health Insurance</h5>
+                    <p className="text-sm text-gray-600">€200 - €800 per year</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Cost of Living */}
+          <div id="cost-living" className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-[#DCE3F1] scroll-mt-24">
+            <button
+              onClick={() => toggleAccordion('cost-living')}
+              className="w-full px-8 py-6 flex justify-between items-center hover:bg-gradient-to-r hover:from-[#EEF4FF] hover:to-[#DBEAFE] transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#8B5CF6] to-[#7C3AED] rounded-xl flex items-center justify-center">
+                  <MapPin className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#2b2d72]">Cost of Living</h3>
+              </div>
+              {activeAccordion === 'cost-living' ? (
+                <ChevronUp className="w-6 h-6 text-[#2b2d72]" />
+              ) : (
+                <ChevronDown className="w-6 h-6 text-gray-600" />
+              )}
+            </button>
+
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                activeAccordion === 'cost-living'
+                  ? 'max-h-[3000px] opacity-100'
+                  : 'max-h-0 opacity-0 overflow-hidden'
+              }`}
+            >
+              <div className="px-8 pb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div className="bg-gradient-to-br from-[#EEF4FF] to-[#DBEAFE] p-6 rounded-2xl shadow-lg border-2 border-[#356AE6]/30">
+                    <h4 className="text-xl font-bold text-[#2b2d72] mb-4 flex items-center gap-2">
+                      <MapPin className="w-5 h-5 text-[#2b2d72]" />
+                      Paris (Capital)
+                    </h4>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Accommodation</span>
+                        <span className="font-bold text-[#2b2d72]">€800 - €1,200</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Food & Groceries</span>
+                        <span className="font-bold text-[#2b2d72]">€300 - €400</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Transportation</span>
+                        <span className="font-bold text-[#2b2d72]">€75 - €100</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Other Expenses</span>
+                        <span className="font-bold text-[#2b2d72]">€200 - €300</span>
+                      </div>
+                      <div className="pt-3 border-t-2 border-[#356AE6]/20 flex justify-between items-center">
+                        <span className="font-bold text-[#2b2d72]">Total Monthly</span>
+                        <span className="font-bold text-2xl text-[#2b2d72]">€1,375 - €2,000</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-[#DCFCE7] to-[#BBF7D0] p-6 rounded-2xl shadow-lg border-2 border-[#10B981]/30">
+                    <h4 className="text-xl font-bold text-[#2b2d72] mb-4 flex items-center gap-2">
+                      <MapPin className="w-5 h-5 text-[#10B981]" />
+                      Other Cities
+                    </h4>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Accommodation</span>
+                        <span className="font-bold text-[#2b2d72]">€400 - €700</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Food & Groceries</span>
+                        <span className="font-bold text-[#2b2d72]">€250 - €350</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Transportation</span>
+                        <span className="font-bold text-[#2b2d72]">€50 - €75</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Other Expenses</span>
+                        <span className="font-bold text-[#2b2d72]">€150 - €250</span>
+                      </div>
+                      <div className="pt-3 border-t-2 border-[#10B981]/20 flex justify-between items-center">
+                        <span className="font-bold text-[#2b2d72]">Total Monthly</span>
+                        <span className="font-bold text-2xl text-[#10B981]">€850 - €1,375</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-white/50 p-4 rounded-xl border border-[#DCE3F1]">
+                    <h5 className="font-bold text-[#2b2d72] mb-2 flex items-center gap-2">
+                      <Building2 className="w-4 h-4 text-[#2b2d72]" />
+                      Housing Options
+                    </h5>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Student residence (CROUS)</li>
+                      <li>• Shared apartments</li>
+                      <li>• Private studios</li>
+                      <li>• Homestay options</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white/50 p-4 rounded-xl border border-[#DCE3F1]">
+                    <h5 className="font-bold text-[#2b2d72] mb-2 flex items-center gap-2">
+                      <Award className="w-4 h-4 text-[#2b2d72]" />
+                      Student Discounts
+                    </h5>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• 50% off transportation</li>
+                      <li>• Museum free entry</li>
+                      <li>• Restaurant discounts</li>
+                      <li>• Entertainment deals</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white/50 p-4 rounded-xl border border-[#DCE3F1]">
+                    <h5 className="font-bold text-[#2b2d72] mb-2 flex items-center gap-2">
+                      <Briefcase className="w-4 h-4 text-[#2b2d72]" />
+                      Part-Time Work
+                    </h5>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Work 20 hours/week</li>
+                      <li>• Minimum wage: €11.65/hr</li>
+                      <li>• Campus jobs available</li>
+                      <li>• €932 monthly potential</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Scholarships */}
+          <div id="scholarships" className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-[#DCE3F1] scroll-mt-24">
+            <button
+              onClick={() => toggleAccordion('scholarships')}
+              className="w-full px-8 py-6 flex justify-between items-center hover:bg-gradient-to-r hover:from-[#EEF4FF] hover:to-[#DBEAFE] transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#EC4899] to-[#DB2777] rounded-xl flex items-center justify-center">
+                  <Award className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#2b2d72]">Scholarships</h3>
+              </div>
+              {activeAccordion === 'scholarships' ? (
+                <ChevronUp className="w-6 h-6 text-[#2b2d72]" />
+              ) : (
+                <ChevronDown className="w-6 h-6 text-gray-600" />
+              )}
+            </button>
+
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                activeAccordion === 'scholarships'
+                  ? 'max-h-[3000px] opacity-100'
+                  : 'max-h-0 opacity-0 overflow-hidden'
+              }`}
+            >
+              <div className="px-8 pb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[
+                    {
+                      name: 'Eiffel Excellence Scholarship',
+                      amount: '€1,400/month',
+                      eligibility: "Master's & PhD students",
+                      coverage: 'Full tuition + monthly stipend + travel',
+                      color: 'from-[#3B82F6] to-[#2563EB]'
+                    },
+                    {
+                      name: 'Charpak Scholarship',
+                      amount: '€700/month',
+                      eligibility: "Indian students for Master's programs",
+                      coverage: 'Partial tuition + living expenses',
+                      color: 'from-[#10B981] to-[#059669]'
+                    },
+                    {
+                      name: 'Erasmus+ Scholarship',
+                      amount: '€500 - €1,500/month',
+                      eligibility: 'European & international students',
+                      coverage: 'Living expenses + travel allowance',
+                      color: 'from-[#F59E0B] to-[#D97706]'
+                    },
+                    {
+                      name: 'Émile Boutmy Scholarship',
+                      amount: 'Up to €19,000',
+                      eligibility: 'Non-EU students at Sciences Po',
+                      coverage: 'Full or partial tuition waiver',
+                      color: 'from-[#8B5CF6] to-[#7C3AED]'
+                    },
+                    {
+                      name: 'French Embassy Scholarship',
+                      amount: 'Varies',
+                      eligibility: 'Country-specific programs',
+                      coverage: 'Tuition + living allowance',
+                      color: 'from-[#EC4899] to-[#DB2777]'
+                    },
+                    {
+                      name: 'University-Specific Scholarships',
+                      amount: '€1,000 - €10,000',
+                      eligibility: 'Merit-based or need-based',
+                      coverage: 'Partial tuition reduction',
+                      color: 'from-[#14B8A6] to-[#0D9488]'
+                    }
+                  ].map((scholarship, index) => (
+                    <div key={index} className={`bg-gradient-to-br ${scholarship.color} p-6 rounded-2xl shadow-lg text-white`}>
+                      <h4 className="text-xl font-bold mb-4">{scholarship.name}</h4>
+                      <div className="space-y-2 bg-white/20 backdrop-blur-sm p-4 rounded-xl">
+                        <div className="flex justify-between items-center">
+                          <span className="text-white/90">Amount:</span>
+                          <span className="font-bold">{scholarship.amount}</span>
+                        </div>
+                        <div className="flex flex-col gap-1 pt-2 border-t border-white/30">
+                          <span className="text-white/90 text-sm">Eligibility:</span>
+                          <span className="font-medium text-sm">{scholarship.eligibility}</span>
+                        </div>
+                        <div className="flex flex-col gap-1 pt-2 border-t border-white/30">
+                          <span className="text-white/90 text-sm">Coverage:</span>
+                          <span className="font-medium text-sm">{scholarship.coverage}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 p-6 bg-white/50 rounded-2xl border border-[#DCE3F1]">
+                  <h5 className="text-lg font-bold text-[#2b2d72] mb-3">How to Apply</h5>
+                  <ul className="space-y-2 text-gray-600">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-[#10B981] flex-shrink-0 mt-0.5" />
+                      <span>Check eligibility criteria on the official scholarship website</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-[#10B981] flex-shrink-0 mt-0.5" />
+                      <span>Most scholarships require admission confirmation first</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-[#10B981] flex-shrink-0 mt-0.5" />
+                      <span>Submit applications early - deadlines are usually 6-12 months before intake</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-[#10B981] flex-shrink-0 mt-0.5" />
+                      <span>Strong academic records and language proficiency increase chances</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Visa Process */}
+          <div id="visa-process" className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-[#DCE3F1] scroll-mt-24">
+            <button
+              onClick={() => toggleAccordion('visa-process')}
+              className="w-full px-8 py-6 flex justify-between items-center hover:bg-gradient-to-r hover:from-[#EEF4FF] hover:to-[#DBEAFE] transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#EF4444] to-[#DC2626] rounded-xl flex items-center justify-center">
+                  <FileText className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#2b2d72]">Visa Process</h3>
+              </div>
+              {activeAccordion === 'visa-process' ? (
+                <ChevronUp className="w-6 h-6 text-[#2b2d72]" />
+              ) : (
+                <ChevronDown className="w-6 h-6 text-gray-600" />
+              )}
+            </button>
+
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                activeAccordion === 'visa-process'
+                  ? 'max-h-[3000px] opacity-100'
+                  : 'max-h-0 opacity-0 overflow-hidden'
+              }`}
+            >
+              <div className="px-8 pb-8">
+                <div className="space-y-4">
+                  {[
+                    {
+                      step: 'Step 1',
+                      title: 'Campus France Registration',
+                      description: 'Create an account on Campus France portal, complete your profile, and submit all academic documents',
+                      time: '2-4 weeks',
+                      color: 'from-[#3B82F6] to-[#2563EB]'
+                    },
+                    {
+                      step: 'Step 2',
+                      title: 'Pedagogical Interview',
+                      description: 'Attend an interview at Campus France to discuss your study project and academic goals',
+                      time: '1-2 weeks',
+                      color: 'from-[#10B981] to-[#059669]'
+                    },
+                    {
+                      step: 'Step 3',
+                      title: 'University Admission',
+                      description: 'Apply to universities through the Campus France platform and wait for acceptance letters',
+                      time: '4-8 weeks',
+                      color: 'from-[#F59E0B] to-[#D97706]'
+                    },
+                    {
+                      step: 'Step 4',
+                      title: 'Visa Application',
+                      description: 'Submit visa application at VFS France with all required documents and biometrics',
+                      time: '2-3 weeks',
+                      color: 'from-[#8B5CF6] to-[#7C3AED]'
+                    },
+                    {
+                      step: 'Step 5',
+                      title: 'OFII Validation',
+                      description: 'Upon arrival in France, validate your visa at OFII (French Immigration Office) within 3 months',
+                      time: 'Within 3 months of arrival',
+                      color: 'from-[#EC4899] to-[#DB2777]'
+                    }
+                  ].map((item, index) => (
+                    <div key={index} className="bg-white/50 rounded-2xl p-6 border border-[#DCE3F1] hover:shadow-lg transition-all">
+                      <div className="flex items-start gap-4">
+                        <div className={`w-12 h-12 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center flex-shrink-0`}>
+                          <span className="text-white font-bold">{index + 1}</span>
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="text-lg font-bold text-[#2b2d72]">{item.title}</h4>
+                            <span className="text-xs font-medium text-[#2b2d72] bg-[#EEF4FF] px-3 py-1 rounded-full">
+                              {item.time}
+                            </span>
+                          </div>
+                          <p className="text-gray-600">{item.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-gradient-to-br from-[#DCFCE7] to-[#BBF7D0] p-4 rounded-xl">
+                    <h5 className="font-bold text-[#2b2d72] mb-2">Visa Fees</h5>
+                    <p className="text-2xl font-bold text-[#10B981]">€99</p>
+                    <p className="text-sm text-gray-600 mt-1">Long-stay student visa (VLS-TS)</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-[#FEF3C7] to-[#FDE68A] p-4 rounded-xl">
+                    <h5 className="font-bold text-[#2b2d72] mb-2">Processing Time</h5>
+                    <p className="text-2xl font-bold text-[#F59E0B]">2-3 weeks</p>
+                    <p className="text-sm text-gray-600 mt-1">After document submission</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-[#EEF4FF] to-[#DBEAFE] p-4 rounded-xl">
+                    <h5 className="font-bold text-[#2b2d72] mb-2">Visa Validity</h5>
+                    <p className="text-2xl font-bold text-[#2b2d72]">1 Year+</p>
+                    <p className="text-sm text-gray-600 mt-1">Renewable annually</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Document Checklist */}
+          <div id="documents" className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-[#DCE3F1] scroll-mt-24">
+            <button
+              onClick={() => toggleAccordion('documents')}
+              className="w-full px-8 py-6 flex justify-between items-center hover:bg-gradient-to-r hover:from-[#EEF4FF] hover:to-[#DBEAFE] transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#14B8A6] to-[#0D9488] rounded-xl flex items-center justify-center">
+                  <FileText className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#2b2d72]">Document Checklist</h3>
+              </div>
+              {activeAccordion === 'documents' ? (
+                <ChevronUp className="w-6 h-6 text-[#2b2d72]" />
+              ) : (
+                <ChevronDown className="w-6 h-6 text-gray-600" />
+              )}
+            </button>
+
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                activeAccordion === 'documents'
+                  ? 'max-h-[3000px] opacity-100'
+                  : 'max-h-0 opacity-0 overflow-hidden'
+              }`}
+            >
+              <div className="px-8 pb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[
+                    {
+                      title: 'Valid Passport',
+                      description: 'Passport valid for at least 6 months beyond intended stay',
+                      icon: FileText,
+                      items: ['Original passport', 'Photo page copies', 'Previous visa copies (if any)']
+                    },
+                    {
+                      title: 'Academic Transcripts',
+                      description: 'Official transcripts from all previous institutions',
+                      icon: GraduationCap,
+                      items: ['10th & 12th mark sheets', 'Bachelor\'s degree & transcripts', 'Master\'s documents (if applicable)', 'English translation (certified)']
+                    },
+                    {
+                      title: 'Statement of Purpose',
+                      description: 'Personal essay explaining your study goals and motivation',
+                      icon: FileText,
+                      items: ['Why France and this university', 'Career goals', 'How program aligns with goals', '500-1000 words']
+                    },
+                    {
+                      title: 'Letters of Recommendation',
+                      description: 'Academic or professional references',
+                      icon: Mail,
+                      items: ['2-3 LORs required', 'From professors or employers', 'On official letterhead', 'Recent (within 1 year)']
+                    },
+                    {
+                      title: 'Language Proficiency',
+                      description: 'English or French language test scores',
+                      icon: Globe,
+                      items: ['IELTS (6.5+) or TOEFL (90+)', 'DELF/DALF for French programs', 'TCF or TEF accepted', 'Valid for 2 years']
+                    },
+                    {
+                      title: 'Resume/CV',
+                      description: 'Detailed curriculum vitae',
+                      icon: Briefcase,
+                      items: ['Academic background', 'Work experience', 'Skills & achievements', 'Extracurricular activities']
+                    },
+                    {
+                      title: 'Financial Documents',
+                      description: 'Proof of sufficient funds',
+                      icon: DollarSign,
+                      items: ['Bank statements (last 6 months)', 'Minimum €615/month proof', 'Sponsor letter (if applicable)', 'Scholarship letter (if awarded)']
+                    },
+                    {
+                      title: 'Visa Documents',
+                      description: 'Additional visa application materials',
+                      icon: Shield,
+                      items: ['Visa application form', 'Passport-size photos', 'Travel insurance', 'Accommodation proof', 'Return flight booking']
+                    },
+                    {
+                      title: 'Campus France Requirements',
+                      description: 'Campus France specific documents',
+                      icon: CheckCircle,
+                      items: ['Campus France registration', 'Pedagogical interview confirmation', 'University acceptance letter', 'Fee payment receipts']
+                    }
+                  ].map((doc, index) => (
+                    <div key={index} className="bg-white/50 rounded-2xl p-6 border border-[#DCE3F1] hover:shadow-lg transition-all">
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 bg-gradient-to-br from-[#356AE6] to-[#2447B8] rounded-lg flex items-center justify-center flex-shrink-0">
+                          <doc.icon className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-lg font-bold text-[#2b2d72] mb-1">{doc.title}</h4>
+                          <p className="text-sm text-gray-600 mb-3">{doc.description}</p>
+                          <ul className="space-y-1">
+                            {doc.items.map((item, i) => (
+                              <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                                <CheckCircle className="w-4 h-4 text-[#10B981] flex-shrink-0 mt-0.5" />
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 p-6 bg-gradient-to-r from-[#FEF3C7] to-[#FDE68A] rounded-2xl border-2 border-[#F59E0B]/30">
+                  <h5 className="text-lg font-bold text-[#2b2d72] mb-3">Important Notes</h5>
+                  <ul className="space-y-2 text-gray-600">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#F59E0B] font-bold">•</span>
+                      <span>All documents must be translated into English or French by a certified translator</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#F59E0B] font-bold">•</span>
+                      <span>Keep multiple photocopies of all original documents</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#F59E0B] font-bold">•</span>
+                      <span>Start gathering documents at least 6 months before application deadline</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#F59E0B] font-bold">•</span>
+                      <span>Campus France registration is mandatory for all international students</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Admission Process */}
+          <div id="admission-process" className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-[#DCE3F1] scroll-mt-24">
+            <button
+              onClick={() => toggleAccordion('admission-process')}
+              className="w-full px-8 py-6 flex justify-between items-center hover:bg-gradient-to-r hover:from-[#EEF4FF] hover:to-[#DBEAFE] transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#06B6D4] to-[#0891B2] rounded-xl flex items-center justify-center">
+                  <CheckCircle className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#2b2d72]">Admission Process</h3>
+              </div>
+              {activeAccordion === 'admission-process' ? (
+                <ChevronUp className="w-6 h-6 text-[#2b2d72]" />
+              ) : (
+                <ChevronDown className="w-6 h-6 text-gray-600" />
+              )}
+            </button>
+
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                activeAccordion === 'admission-process'
+                  ? 'max-h-[3000px] opacity-100'
+                  : 'max-h-0 opacity-0 overflow-hidden'
+              }`}
+            >
+              <div className="px-8 pb-8">
+                <div className="relative">
+                  {[
+                    {
+                      phase: 'Research Phase',
+                      duration: '2-3 months before',
+                      tasks: ['Research universities and programs', 'Check eligibility requirements', 'Understand tuition and living costs', 'Explore scholarship opportunities']
+                    },
+                    {
+                      phase: 'Application Preparation',
+                      duration: '4-6 months before',
+                      tasks: ['Gather all required documents', 'Take language proficiency tests', 'Write Statement of Purpose', 'Obtain Letters of Recommendation', 'Prepare financial documents']
+                    },
+                    {
+                      phase: 'Campus France Process',
+                      duration: '3-5 months before',
+                      tasks: ['Create Campus France account', 'Complete online profile', 'Upload all documents', 'Pay Campus France fee', 'Schedule pedagogical interview']
+                    },
+                    {
+                      phase: 'University Application',
+                      duration: '2-4 months before',
+                      tasks: ['Submit applications through Campus France', 'Apply directly to universities (if applicable)', 'Pay application fees', 'Track application status', 'Wait for admission decisions']
+                    },
+                    {
+                      phase: 'Acceptance & Visa',
+                      duration: '1-2 months before',
+                      tasks: ['Accept university offer', 'Pay tuition deposit', 'Apply for student visa', 'Attend visa interview', 'Receive visa approval']
+                    },
+                    {
+                      phase: 'Pre-Departure',
+                      duration: 'Few weeks before',
+                      tasks: ['Book flight tickets', 'Arrange accommodation', 'Purchase travel insurance', 'Prepare for arrival', 'OFII validation upon arrival']
+                    }
+                  ].map((step, index) => (
+                    <div key={index} className="relative pl-8 pb-8 last:pb-0">
+                      {index !== 5 && (
+                        <div className="absolute left-[11px] top-[40px] bottom-0 w-0.5 bg-gradient-to-b from-[#356AE6] to-[#2447B8]"></div>
+                      )}
+                      <div className="absolute left-0 top-0 w-6 h-6 bg-gradient-to-br from-[#356AE6] to-[#2447B8] rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs font-bold">{index + 1}</span>
+                      </div>
+                      <div className="bg-white/50 rounded-xl p-6 border border-[#DCE3F1]">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="text-lg font-bold text-[#2b2d72]">{step.phase}</h4>
+                          <span className="text-xs font-medium text-[#2b2d72] bg-[#EEF4FF] px-3 py-1 rounded-full">
+                            {step.duration}
+                          </span>
+                        </div>
+                        <ul className="space-y-2">
+                          {step.tasks.map((task, i) => (
+                            <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                              <CheckCircle className="w-4 h-4 text-[#10B981] flex-shrink-0 mt-0.5" />
+                              <span>{task}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 p-6 bg-gradient-to-r from-[#EEF4FF] to-[#DBEAFE] rounded-2xl border-2 border-[#356AE6]/30">
+                  <h5 className="text-lg font-bold text-[#2b2d72] mb-3 flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-[#2b2d72]" />
+                    Pro Tips
+                  </h5>
+                  <ul className="space-y-2 text-gray-600">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#2b2d72] font-bold">•</span>
+                      <span>Start the process at least 12 months before your intended intake date</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#2b2d72] font-bold">•</span>
+                      <span>Campus France process is mandatory and takes 2-4 months</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#2b2d72] font-bold">•</span>
+                      <span>Apply to multiple universities to increase acceptance chances</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#2b2d72] font-bold">•</span>
+                      <span>Keep in touch with our consultants throughout the process for guidance</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* FAQ */}
+          <div id="faq" className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-[#DCE3F1] scroll-mt-24">
+            <button
+              onClick={() => toggleAccordion('faq')}
+              className="w-full px-8 py-6 flex justify-between items-center hover:bg-gradient-to-r hover:from-[#EEF4FF] hover:to-[#DBEAFE] transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#A855F7] to-[#9333EA] rounded-xl flex items-center justify-center">
+                  <MessageCircle className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#2b2d72]">Frequently Asked Questions</h3>
+              </div>
+              {activeAccordion === 'faq' ? (
+                <ChevronUp className="w-6 h-6 text-[#2b2d72]" />
+              ) : (
+                <ChevronDown className="w-6 h-6 text-gray-600" />
+              )}
+            </button>
+
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                activeAccordion === 'faq'
+                  ? 'max-h-[5000px] opacity-100'
+                  : 'max-h-0 opacity-0 overflow-hidden'
+              }`}
+            >
+              <div className="px-8 pb-8 space-y-4">
+                {[
+                  {
+                    question: 'Do I need to learn French to study in France?',
+                    answer: 'Not necessarily. Many universities offer programs fully taught in English, especially at the Master\'s level. However, learning French can enhance your experience and is required for some programs. You\'ll need IELTS/TOEFL for English programs or DELF/DALF for French-taught programs.'
+                  },
+                  {
+                    question: 'How much does it cost to study in France?',
+                    answer: 'Public universities charge €170-€650 per year for tuition, making France one of the most affordable study destinations in Europe. Private institutions range from €3,000-€30,000 per year. Living costs are €850-€2,000 per month depending on the city.'
+                  },
+                  {
+                    question: 'Can I work while studying in France?',
+                    answer: 'Yes! International students can work up to 20 hours per week (964 hours per year) during their studies. The minimum wage is €11.65 per hour, allowing you to earn around €932 per month, which can significantly offset living expenses.'
+                  },
+                  {
+                    question: 'What is Campus France and is it mandatory?',
+                    answer: 'Campus France is the official French government agency for promoting higher education. Registration with Campus France is mandatory for all international students applying to French universities. The process includes profile creation, document submission, and a pedagogical interview.'
+                  },
+                  {
+                    question: 'Can I stay in France after graduation?',
+                    answer: 'Yes! France offers a 2-year post-study work permit (APS - Autorisation Provisoire de Séjour) for graduates. This allows you to search for employment or start a business. After 5 years of legal residence, you can apply for permanent residency.'
+                  },
+                  {
+                    question: 'What are the language requirements?',
+                    answer: 'For English-taught programs: IELTS 6.5+ or TOEFL 90+. For French-taught programs: DELF B2 or DALF C1. Some universities may accept TCF or TEF. Requirements vary by university and program, so check specific institution requirements.'
+                  },
+                  {
+                    question: 'How long does the visa process take?',
+                    answer: 'The complete process takes 3-6 months: Campus France registration (2-4 weeks), pedagogical interview (1-2 weeks), university admission (4-8 weeks), and visa processing (2-3 weeks). Start at least 6 months before your intended start date.'
+                  },
+                  {
+                    question: 'Is health insurance mandatory for students?',
+                    answer: 'Yes, health insurance is mandatory. Students under 28 are automatically enrolled in the French student social security system (around €100/year). Additional private insurance (mutuelle) is recommended and costs €200-€800/year.'
+                  },
+                  {
+                    question: 'What accommodation options are available?',
+                    answer: 'Options include university residences (CROUS, €200-€600/month), private student residences (€500-€900/month), shared apartments (€400-€800/month), and homestays. CROUS accommodation is affordable but limited - apply early!'
+                  },
+                  {
+                    question: 'Are there scholarships for international students?',
+                    answer: 'Yes! France offers several scholarships: Eiffel Excellence (€1,400/month), Charpak Scholarship for Indian students (€700/month), Erasmus+ (€500-€1,500/month), and university-specific scholarships. Most require strong academic records and early application.'
+                  }
+                ].map((faq, index) => (
+                  <div key={index} className="bg-white/50 rounded-xl p-6 border border-[#DCE3F1] hover:shadow-lg transition-all">
+                    <h4 className="text-lg font-bold text-[#2b2d72] mb-3 flex items-start gap-2">
+                      <span className="text-[#2b2d72] flex-shrink-0">Q{index + 1}.</span>
+                      <span>{faq.question}</span>
+                    </h4>
+                    <p className="text-gray-600 leading-relaxed pl-8">{faq.answer}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form */}
+      <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#356AE6]/5 to-[#2447B8]/5">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-[#356AE6] to-[#2447B8] bg-clip-text text-transparent">
+              Get in Touch
+            </h2>
+            <p className="text-xl text-gray-600">
+              Start your France study journey with us
+            </p>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-md rounded-3xl p-8 shadow-2xl border border-[#DCE3F1]">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-[#2b2d72] mb-2">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 rounded-xl border-2 border-[#DCE3F1] focus:border-[#356AE6] focus:outline-none transition-colors"
+                  placeholder="Enter your full name"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-[#2b2d72] mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 rounded-xl border-2 border-[#DCE3F1] focus:border-[#356AE6] focus:outline-none transition-colors"
+                  placeholder="your.email@example.com"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-[#2b2d72] mb-2">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 rounded-xl border-2 border-[#DCE3F1] focus:border-[#356AE6] focus:outline-none transition-colors"
+                  placeholder="+91 98765 43210"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="course" className="block text-sm font-medium text-[#2b2d72] mb-2">
+                  Preferred Course
+                </label>
+                <select
+                  id="course"
+                  name="course"
+                  value={formData.course}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 rounded-xl border-2 border-[#DCE3F1] focus:border-[#356AE6] focus:outline-none transition-colors"
+                >
+                  <option value="">Select a course</option>
+                  <option value="Business Management">Business Management</option>
+                  <option value="Fashion Designing">Fashion Designing</option>
+                  <option value="Culinary Arts">Culinary Arts</option>
+                  <option value="Engineering">Engineering</option>
+                  <option value="Data Science">Data Science</option>
+                  <option value="AI">Artificial Intelligence</option>
+                  <option value="Hospitality">Hospitality</option>
+                  <option value="Finance">Finance</option>
+                  <option value="Arts & Design">Arts & Design</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="intake" className="block text-sm font-medium text-[#2b2d72] mb-2">
+                  Preferred Intake
+                </label>
+                <select
+                  id="intake"
+                  name="intake"
+                  value={formData.intake}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 rounded-xl border-2 border-[#DCE3F1] focus:border-[#356AE6] focus:outline-none transition-colors"
+                >
+                  <option value="">Select intake</option>
+                  <option value="Fall 2026 (September)">Fall 2026 (September)</option>
+                  <option value="Spring 2027 (January)">Spring 2027 (January)</option>
+                  <option value="Fall 2027 (September)">Fall 2027 (September)</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-[#2b2d72] mb-2">
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  rows={4}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-[#DCE3F1] focus:border-[#356AE6] focus:outline-none transition-colors resize-none"
+                  placeholder="Tell us about your study plans..."
+                ></textarea>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  type="submit"
+                  className="flex-1 py-4 bg-gradient-to-r from-[#356AE6] to-[#2447B8] text-white rounded-xl font-semibold hover:shadow-2xl transition-all hover:-translate-y-1 flex items-center justify-center gap-2"
+                >
+                  <Mail className="w-5 h-5" />
+                  Send Enquiry
+                </button>
+                <a
+                  href="https://wa.me/917299005577"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 py-4 bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white rounded-xl font-semibold hover:shadow-2xl transition-all hover:-translate-y-1 flex items-center justify-center gap-2"
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  Chat on WhatsApp
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form */}
+      <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#2b2d72] to-[#1a1d4a] text-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Side - Info */}
+            <div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+                Start Your Journey Today
+              </h2>
+              <p className="text-xl text-white/90 mb-8 leading-relaxed">
+                Get in touch with our expert counselors for personalized guidance on studying in France.
+              </p>
+
+              <div className="space-y-6">
+                {[
+                  { icon: Phone, text: '+91 72990 05577', label: 'Call Us' },
+                  { icon: Mail, text: 'info@studysingapore.com', label: 'Email Us' },
+                  { icon: Clock, text: 'Mon - Sat: 9 AM - 7 PM', label: 'Working Hours' }
+                ].map((item, index) => (
+                  <div key={index} className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
+                      <item.icon className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-white/70">{item.label}</p>
+                      <p className="font-semibold">{item.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8">
+                <a
+                  href="https://wa.me/917299005577"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-[#25D366] text-white rounded-full font-bold hover:shadow-2xl transition-all hover:-translate-y-1"
+                >
+                  <MessageCircle className="w-6 h-6" />
+                  <span>Chat on WhatsApp</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Right Side - Form */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
+              <h3 className="text-2xl font-bold mb-6">Request Free Consultation</h3>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="Your Full Name"
+                    required
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-white/40 transition-all"
+                  />
+                </div>
+                <div>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="Your Email Address"
+                    required
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-white/40 transition-all"
+                  />
+                </div>
+                <div>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    placeholder="Your Phone Number"
+                    required
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-white/40 transition-all"
+                  />
+                </div>
+                <div>
+                  <select
+                    name="course"
+                    value={formData.course}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-white/40 transition-all"
+                  >
+                    <option value="" className="text-gray-900">Select Course Interest</option>
+                    <option value="Business" className="text-gray-900">Business Management</option>
+                    <option value="Engineering" className="text-gray-900">Engineering</option>
+                    <option value="IT" className="text-gray-900">Information Technology</option>
+                    <option value="Finance" className="text-gray-900">Finance & Banking</option>
+                    <option value="Other" className="text-gray-900">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    placeholder="Your Message (Optional)"
+                    rows={3}
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-white/40 transition-all resize-none"
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full py-4 bg-white text-[#2b2d72] rounded-xl font-bold hover:shadow-2xl transition-all hover:-translate-y-1 flex items-center justify-center gap-2"
+                >
+                  <span>Submit Application</span>
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Floating WhatsApp Button */}
+      <a
+        href="https://wa.me/917299005577"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-8 right-8 w-16 h-16 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-2xl hover:scale-110 transition-transform z-50 animate-pulse"
+      >
+        <MessageCircle className="w-8 h-8" />
+      </a>
+
+      {/* Enquiry Popup */}
+      {isEnquiryOpen && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4">
+          <div className="bg-gradient-to-br from-white via-blue-50/30 to-white rounded-2xl p-8 max-w-md w-full shadow-2xl relative border border-blue-100">
+            <button
+              onClick={() => setIsEnquiryOpen(false)}
+              className="absolute top-4 right-4 text-[#2b2d72] hover:text-red-600 hover:bg-red-50 rounded-lg p-1.5 transition-all"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <h3 className="text-2xl font-bold text-[#2b2d72] mb-2">Quick Enquiry</h3>
+            <p className="text-blue-600/70 text-sm mb-6">Fill in your details and we'll get back to you soon</p>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <label htmlFor="name" className="block text-[#2b2d72] font-semibold mb-2 text-sm">
+                  Full Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Enter your full name"
+                  required
+                  className="w-full px-4 py-3 rounded-xl border-2 border-blue-200 focus:border-[#1A73E8] focus:ring-2 focus:ring-[#1A73E8]/20 focus:outline-none transition-all bg-white/80 backdrop-blur-sm text-[#2b2d72] font-medium placeholder:text-blue-400/60"
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-[#2b2d72] font-semibold mb-2 text-sm">
+                  Email Address <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="your.email@example.com"
+                  required
+                  className="w-full px-4 py-3 rounded-xl border-2 border-blue-200 focus:border-[#1A73E8] focus:ring-2 focus:ring-[#1A73E8]/20 focus:outline-none transition-all bg-white/80 backdrop-blur-sm text-[#2b2d72] font-medium placeholder:text-blue-400/60"
+                />
+              </div>
+              <div>
+                <label htmlFor="phone" className="block text-[#2b2d72] font-semibold mb-2 text-sm">
+                  Phone Number <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="+91 98765 43210"
+                  required
+                  className="w-full px-4 py-3 rounded-xl border-2 border-blue-200 focus:border-[#1A73E8] focus:ring-2 focus:ring-[#1A73E8]/20 focus:outline-none transition-all bg-white/80 backdrop-blur-sm text-[#2b2d72] font-medium placeholder:text-blue-400/60"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full py-4 bg-gradient-to-r from-[#1A73E8] to-[#0D5DBD] text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:-translate-y-0.5 hover:scale-[1.02] transition-all duration-300"
+              >
+                Submit Enquiry
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

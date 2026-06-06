@@ -1,0 +1,698 @@
+import { useState } from 'react';
+import { Navigation } from './Navigation';
+import { Footer } from './Footer';
+import { EnquiryPopup } from './EnquiryPopup';
+import {
+  Briefcase, Target, TrendingUp, Users, CheckCircle, ArrowRight,
+  Clock, BookOpen, Award, Lightbulb, FileText, MessageCircle,
+  ChevronDown, Phone, Mail, Globe, Code, Heart, DollarSign,
+  BarChart, Compass, Star, Zap, Home
+} from 'lucide-react';
+
+export function CareerCounselingPage() {
+  const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
+  const [activeAccordion, setActiveAccordion] = useState<number | null>(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    field: '',
+    education: '',
+    message: ''
+  });
+
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    phone: ''
+  });
+
+  const benefits = [
+    {
+      icon: <Target className="w-6 h-6" />,
+      title: 'Personalized Career Assessment',
+      description: 'In-depth analysis of your interests, skills, and aptitudes to identify the best career paths.'
+    },
+    {
+      icon: <Globe className="w-6 h-6" />,
+      title: 'Global Career Mapping',
+      description: 'Explore international career opportunities aligned with your chosen study destination.'
+    },
+    {
+      icon: <BookOpen className="w-6 h-6" />,
+      title: 'Course-Career Alignment',
+      description: 'Match your academic program with long-term career goals and industry demands.'
+    },
+    {
+      icon: <TrendingUp className="w-6 h-6" />,
+      title: 'Industry Insights',
+      description: 'Access to latest job market trends, salary benchmarks, and growth projections.'
+    },
+    {
+      icon: <Users className="w-6 h-6" />,
+      title: 'Professional Networking',
+      description: 'Connect with industry mentors, alumni networks, and career development resources.'
+    },
+    {
+      icon: <FileText className="w-6 h-6" />,
+      title: 'Resume & LinkedIn Profile',
+      description: 'Professional assistance in creating compelling resumes and LinkedIn profiles.'
+    }
+  ];
+
+  const process = [
+    {
+      step: '01',
+      title: 'Initial Assessment',
+      description: 'Comprehensive evaluation of your academic background, interests, and career aspirations.'
+    },
+    {
+      step: '02',
+      title: 'Career Profiling',
+      description: 'Identify your strengths, personality traits, and suitable career options through assessments.'
+    },
+    {
+      step: '03',
+      title: 'Market Research',
+      description: 'Analyze job market trends, industry demand, and salary prospects in your field.'
+    },
+    {
+      step: '04',
+      title: 'Course Recommendation',
+      description: 'Match your career goals with appropriate academic programs and universities.'
+    },
+    {
+      step: '05',
+      title: 'Skill Development Plan',
+      description: 'Create a roadmap for acquiring essential skills and certifications.'
+    },
+    {
+      step: '06',
+      title: 'Post-Study Work Options',
+      description: 'Explore work permits, PR pathways, and job opportunities in your destination country.'
+    }
+  ];
+
+  const careerFields = [
+    {
+      title: 'Technology & IT',
+      icon: <Code className="w-8 h-8" />,
+      color: 'from-[#1A73E8] to-[#0D5DBD]',
+      roles: [
+        'Software Engineer',
+        'Data Scientist',
+        'Cybersecurity Analyst',
+        'AI/ML Engineer',
+        'Cloud Architect',
+        'Full Stack Developer'
+      ]
+    },
+    {
+      title: 'Business & Management',
+      icon: <Briefcase className="w-8 h-8" />,
+      color: 'from-[#F4C430] to-[#F4A430]',
+      roles: [
+        'Management Consultant',
+        'Product Manager',
+        'Business Analyst',
+        'Marketing Manager',
+        'Operations Manager',
+        'Financial Analyst'
+      ]
+    },
+    {
+      title: 'Healthcare & Medicine',
+      icon: <Heart className="w-8 h-8" />,
+      color: 'from-[#0A2472] to-[#1A3A8F]',
+      roles: [
+        'Physician',
+        'Surgeon',
+        'Healthcare Administrator',
+        'Medical Researcher',
+        'Public Health Specialist',
+        'Clinical Pharmacist'
+      ]
+    },
+    {
+      title: 'Engineering',
+      icon: <Zap className="w-8 h-8" />,
+      color: 'from-[#1A3A8F] to-[#0A2472]',
+      roles: [
+        'Mechanical Engineer',
+        'Civil Engineer',
+        'Electrical Engineer',
+        'Aerospace Engineer',
+        'Biomedical Engineer',
+        'Environmental Engineer'
+      ]
+    }
+  ];
+
+  const services = [
+    {
+      title: 'Aptitude Testing',
+      description: 'Scientific assessment tools to identify your natural talents and career inclinations.'
+    },
+    {
+      title: 'Industry Mentorship',
+      description: 'Connect with professionals working in your field of interest for real-world insights.'
+    },
+    {
+      title: 'Resume Building',
+      description: 'Expert guidance on creating ATS-optimized resumes that stand out to recruiters.'
+    },
+    {
+      title: 'Interview Preparation',
+      description: 'Mock interviews, common questions, and strategies for both behavioral and technical rounds.'
+    },
+    {
+      title: 'LinkedIn Optimization',
+      description: 'Professional profile setup to increase visibility and attract opportunities.'
+    },
+    {
+      title: 'Salary Negotiation',
+      description: 'Learn strategies for negotiating competitive salaries and benefit packages.'
+    }
+  ];
+
+  const faqs = [
+    {
+      question: 'When should I start career counseling?',
+      answer: 'Ideally, start career counseling before selecting your course and university. Early planning (6-12 months before application) helps you make informed decisions about your academic path that aligns with long-term career goals. However, we also provide career guidance at any stage of your academic journey.'
+    },
+    {
+      question: 'How do you match courses with career opportunities?',
+      answer: 'We analyze current job market trends, industry growth projections, salary benchmarks, and post-study work opportunities in your destination country. We then match these insights with your academic interests, skills, and career aspirations to recommend programs that offer the best career prospects.'
+    },
+    {
+      question: 'Can you help with post-study work permits and PR pathways?',
+      answer: 'Yes! We provide comprehensive guidance on post-study work visas (PSW), work permit regulations, PR pathways, and permanent residency options for various countries including Canada, Australia, UK, and more. We help you understand eligibility criteria and application procedures.'
+    },
+    {
+      question: 'Do you offer industry-specific career counseling?',
+      answer: 'Absolutely. We have career counselors specializing in various fields including Technology, Healthcare, Business, Engineering, Design, Social Sciences, and more. They provide industry-specific insights, emerging trends, and specialized career pathways in your field.'
+    },
+    {
+      question: 'What is included in resume and LinkedIn profile services?',
+      answer: 'Our services include professional resume writing, ATS optimization, LinkedIn profile creation and optimization, headline crafting, skills endorsements strategy, and networking guidance. We ensure your professional brand stands out to recruiters and hiring managers globally.'
+    },
+    {
+      question: 'How do you stay updated with global job market trends?',
+      answer: 'Our team regularly monitors industry reports, salary surveys, employer demand data, and immigration policies. We maintain connections with universities, recruitment agencies, and professional organizations worldwide to provide you with the most current and accurate career information.'
+    }
+  ];
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setErrors({ ...errors, email: 'Please enter a valid email address' });
+      return;
+    }
+
+    // Phone validation
+    if (formData.phone.replace(/[\s\-+]/g, '').length < 10) {
+      setErrors({ ...errors, phone: 'Please enter a valid phone number' });
+      return;
+    }
+
+    console.log('Form submitted:', formData);
+    setIsEnquiryOpen(true);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+
+    // Validation logic
+    if (name === 'name') {
+      // Only allow letters and spaces
+      if (!/^[A-Za-z\s]*$/.test(value)) {
+        return; // Don't update if invalid
+      }
+    }
+
+    if (name === 'phone') {
+      // Only allow numbers
+      if (!/^[0-9]*$/.test(value)) {
+        return; // Don't update if invalid
+      }
+    }
+
+    setFormData(prev => ({ ...prev, [name]: value }));
+
+    // Clear error when user types
+    setErrors({
+      ...errors,
+      [name]: ''
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-white">
+      <Navigation onEnquiryClick={() => setIsEnquiryOpen(true)} activePage="services" />
+
+      {/* Breadcrumb Navigation */}
+      <div className="bg-gray-50 border-b border-gray-200 mt-[72px]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center gap-2 text-sm">
+            <a href="/" className="text-gray-600 hover:text-[#2b2d72] transition-colors flex items-center gap-1">
+              <Home className="w-[14px] h-[14px]" />
+              Home
+            </a>
+            <ChevronDown className="w-4 h-4 text-gray-400 -rotate-90" />
+            <a href="/#services" className="text-gray-600 hover:text-[#2b2d72] transition-colors">
+              Services
+            </a>
+            <ChevronDown className="w-4 h-4 text-gray-400 -rotate-90" />
+            <span className="text-[#2b2d72] font-semibold">Career Counseling</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-[#0A2472] via-[#1A3A8F] to-[#0A2472] text-white py-20 overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6">
+                <Compass className="w-4 h-4" />
+                <span className="text-sm font-semibold">Navigate Your Career Path</span>
+              </div>
+
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                Career <span className="text-[#F4C430]">Counseling</span>
+              </h1>
+
+              <p className="text-lg md:text-xl text-white/80 mb-8 leading-relaxed">
+                Strategic career planning tailored to your academic journey. Align your study abroad experience with global career opportunities and long-term professional success.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={() => setIsEnquiryOpen(true)}
+                  className="bg-gradient-to-r from-[#F4C430] to-[#F4A430] text-[#0A2472] px-8 py-4 rounded-lg font-semibold hover:shadow-xl transition-all flex items-center justify-center gap-2"
+                >
+                  Book Career Consultation
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+                <a
+                  href="#contact-form"
+                  className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-[#0A2472] transition-all text-center"
+                >
+                  Get Career Assessment
+                </a>
+              </div>
+            </div>
+
+            <div className="hidden lg:block">
+              <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8">
+                <h3 className="text-2xl font-bold mb-6 text-[#F4C430]">Career Success Metrics</h3>
+                <div className="space-y-6">
+                  <div>
+                    <div className="flex justify-between mb-2">
+                      <span>Job Placement Rate</span>
+                      <span className="font-bold">94%</span>
+                    </div>
+                    <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+                      <div className="h-full bg-[#F4C430] w-[94%]" />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between mb-2">
+                      <span>Career Satisfaction</span>
+                      <span className="font-bold">89%</span>
+                    </div>
+                    <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+                      <div className="h-full bg-[#F4C430] w-[89%]" />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between mb-2">
+                      <span>Goal Achievement</span>
+                      <span className="font-bold">91%</span>
+                    </div>
+                    <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+                      <div className="h-full bg-[#F4C430] w-[91%]" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Key Benefits */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#000000] mb-4">
+              Why Career Counseling Matters
+            </h2>
+            <p className="text-lg text-[#000000] max-w-3xl mx-auto">
+              Make informed decisions about your future with expert guidance and strategic planning
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {benefits.map((benefit, index) => (
+              <div
+                key={index}
+                className="bg-gradient-to-br from-[#EFF6FF] to-[#DBEAFE] rounded-xl p-8 hover:shadow-xl transition-all border border-[#E5E9F2]"
+              >
+                <div className="w-14 h-14 bg-gradient-to-br from-[#1A73E8] to-[#0D5DBD] rounded-lg flex items-center justify-center text-white mb-6">
+                  {benefit.icon}
+                </div>
+                <h3 className="text-xl font-bold text-[#000000] mb-3">{benefit.title}</h3>
+                <p className="text-[#000000] leading-relaxed">{benefit.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Process Section */}
+      <section className="py-20 bg-gradient-to-br from-[#EFF6FF] via-white to-[#DBEAFE]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#000000] mb-4">
+              Our Career Counseling Process
+            </h2>
+            <p className="text-lg text-[#000000] max-w-3xl mx-auto">
+              A systematic approach to discovering and achieving your career goals
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {process.map((item, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all border-t-4 border-[#F4C430]"
+              >
+                <div className="text-5xl font-bold text-[#F4C430] mb-4 opacity-50">{item.step}</div>
+                <h3 className="text-xl font-bold text-[#000000] mb-3">{item.title}</h3>
+                <p className="text-[#000000] leading-relaxed">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Career Fields */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#000000] mb-4">
+              Popular Career Fields
+            </h2>
+            <p className="text-lg text-[#000000] max-w-3xl mx-auto">
+              Explore top career paths and roles we specialize in guiding students towards
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {careerFields.map((field, index) => (
+              <div
+                key={index}
+                className={`bg-gradient-to-br ${field.color} rounded-xl p-8 text-white`}
+              >
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                    {field.icon}
+                  </div>
+                  <h3 className="text-2xl font-bold">{field.title}</h3>
+                </div>
+                <ul className="space-y-3">
+                  {field.roles.map((role, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                      <span>{role}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Additional Services */}
+      <section className="py-20 bg-gradient-to-br from-[#EFF6FF] via-white to-[#DBEAFE]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#000000] mb-4">
+              Additional Career Services
+            </h2>
+            <p className="text-lg text-[#000000] max-w-3xl mx-auto">
+              Comprehensive support for every aspect of your professional development
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {services.map((service, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all border-l-4 border-[#1A73E8]"
+              >
+                <h3 className="text-lg font-bold text-[#000000] mb-3">{service.title}</h3>
+                <p className="text-[#000000] text-sm leading-relaxed">{service.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQs */}
+      <section className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#000000] mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-lg text-[#000000]">
+              Common questions about career counseling and planning
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {faqs.map((faq, index) => (
+              <div
+                key={index}
+                className="bg-gradient-to-br from-[#EFF6FF] to-[#DBEAFE] rounded-xl shadow-md overflow-hidden border border-[#E5E9F2]"
+              >
+                <button
+                  onClick={() => setActiveAccordion(activeAccordion === index ? null : index)}
+                  className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-white/50 transition-colors"
+                >
+                  <span className="font-semibold text-[#000000] pr-4">{faq.question}</span>
+                  <ChevronDown
+                    className={`w-5 h-5 text-[#1A73E8] flex-shrink-0 transition-transform ${
+                      activeAccordion === index ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+                {activeAccordion === index && (
+                  <div className="px-6 pb-5 text-[#000000] leading-relaxed bg-white">
+                    {faq.answer}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-br from-[#0A2472] via-[#1A3A8F] to-[#0A2472] text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+        </div>
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <Target className="w-16 h-16 text-[#F4C430] mx-auto mb-6" />
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            Ready to Plan Your Career?
+          </h2>
+          <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
+            Get personalized career guidance from industry experts and align your education with your professional goals.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={() => setIsEnquiryOpen(true)}
+              className="bg-gradient-to-r from-[#F4C430] to-[#F4A430] text-[#0A2472] px-8 py-4 rounded-lg font-semibold hover:shadow-xl transition-all inline-flex items-center justify-center gap-2"
+            >
+              Schedule Career Consultation
+              <ArrowRight className="w-5 h-5" />
+            </button>
+            <a
+              href="tel:+919876543210"
+              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-[#0A2472] transition-all inline-flex items-center justify-center gap-2"
+            >
+              <Phone className="w-5 h-5" />
+              Call Us Now
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form */}
+      <section id="contact-form" className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#000000] mb-4">
+              Request Career Counseling Session
+            </h2>
+            <p className="text-lg text-[#000000]">
+              Fill out the form to schedule your personalized career assessment
+            </p>
+          </div>
+
+          
+        </div>
+      </section>
+
+      {/* Contact Form */}
+      <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#2b2d72] to-[#1a1d4a] text-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Side - Info */}
+            <div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+                Start Your Journey Today
+              </h2>
+              <p className="text-xl text-white/90 mb-8 leading-relaxed">
+                Get in touch with our expert counselors for personalized career guidance.
+              </p>
+
+              <div className="space-y-6">
+                {[
+                  { icon: Phone, text: '+91 72990 05577', label: 'Call Us' },
+                  { icon: Mail, text: 'salesteam@honeytranslations.com', label: 'Email Us' },
+                  { icon: Clock, text: 'Mon - Sat: 9 AM - 7 PM', label: 'Working Hours' }
+                ].map((item, index) => (
+                  <div key={index} className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
+                      <item.icon className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-white/70">{item.label}</p>
+                      <p className="font-semibold">{item.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8">
+                <a
+                  href="https://wa.me/917299005577"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-[#25D366] text-white rounded-full font-bold hover:shadow-2xl transition-all hover:-translate-y-1"
+                >
+                  <MessageCircle className="w-6 h-6" />
+                  <span>Chat on WhatsApp</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Right Side - Form */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
+              <h3 className="text-2xl font-bold mb-6">Request Free Consultation</h3>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="Your Full Name"
+                    required
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-white/40 transition-all"
+                  />
+                </div>
+                <div>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="Your Email Address"
+                    required
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-white/40 transition-all"
+                  />
+                </div>
+                <div>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    placeholder="Your Phone Number"
+                    required
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-white/40 transition-all"
+                  />
+                </div>
+                <div>
+                  <select
+                    name="field"
+                    value={formData.field}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-white/40 transition-all"
+                  >
+                    <option value="" className="text-gray-900">Select Field of Interest</option>
+                    <option value="Business" className="text-gray-900">Business Management</option>
+                    <option value="Engineering" className="text-gray-900">Engineering</option>
+                    <option value="IT" className="text-gray-900">Information Technology</option>
+                    <option value="Finance" className="text-gray-900">Finance & Banking</option>
+                    <option value="Other" className="text-gray-900">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    placeholder="Your Message (Optional)"
+                    rows={3}
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-white/40 transition-all resize-none"
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full py-4 bg-white text-[#2b2d72] rounded-xl font-bold hover:shadow-2xl transition-all hover:-translate-y-1 flex items-center justify-center gap-2"
+                >
+                  <span>Submit Application</span>
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Floating WhatsApp Button */}
+      <a
+        href="https://wa.me/917299005577"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-8 right-8 w-16 h-16 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-2xl hover:scale-110 transition-transform z-50 animate-pulse"
+      >
+        <MessageCircle className="w-8 h-8" />
+      </a>
+
+      <Footer />
+      <EnquiryPopup isOpen={isEnquiryOpen} onClose={() => setIsEnquiryOpen(false)} />
+    </div>
+  );
+}

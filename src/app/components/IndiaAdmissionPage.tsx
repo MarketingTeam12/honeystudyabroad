@@ -1,0 +1,661 @@
+import { useState } from 'react';
+import { Navigation } from './Navigation';
+import { Footer } from './Footer';
+import { EnquiryPopup } from './EnquiryPopup';
+import {
+  GraduationCap, Users, BookOpen, Award, CheckCircle, ArrowRight,
+  Clock, TrendingUp, FileText, Shield, Phone, Mail, MapPin,
+  ChevronDown, Building2, Star, Target, MessageCircle
+} from 'lucide-react';
+
+export function IndiaAdmissionPage() {
+  const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
+  const [activeAccordion, setActiveAccordion] = useState<number | null>(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    course: '',
+    institution: '',
+    message: ''
+  });
+
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    phone: ''
+  });
+
+  const benefits = [
+    {
+      icon: <Target className="w-6 h-6" />,
+      title: 'Expert Guidance',
+      description: 'Navigate through IIT, NIT, IIIT, and top medical & engineering college admissions with ease.'
+    },
+    {
+      icon: <FileText className="w-6 h-6" />,
+      title: 'Document Assistance',
+      description: 'Complete support with application forms, eligibility verification, and document preparation.'
+    },
+    {
+      icon: <Award className="w-6 h-6" />,
+      title: 'Entrance Exam Support',
+      description: 'Guidance for JEE, NEET, CAT, CLAT, and other competitive entrance examinations.'
+    },
+    {
+      icon: <Users className="w-6 h-6" />,
+      title: 'Counseling Support',
+      description: 'Expert assistance during JoSAA, CSAB, state counseling, and management quota admissions.'
+    },
+    {
+      icon: <Clock className="w-6 h-6" />,
+      title: 'Timely Updates',
+      description: 'Stay informed about admission deadlines, exam dates, and counseling schedules.'
+    },
+    {
+      icon: <Shield className="w-6 h-6" />,
+      title: 'Verified Information',
+      description: 'Access to accurate, up-to-date information about courses, fees, and eligibility criteria.'
+    }
+  ];
+
+  const process = [
+    {
+      step: '01',
+      title: 'Initial Consultation',
+      description: 'Discuss your academic background, career goals, and preferred institutions.'
+    },
+    {
+      step: '02',
+      title: 'Eligibility Assessment',
+      description: 'Evaluate your qualifications and identify suitable courses and colleges.'
+    },
+    {
+      step: '03',
+      title: 'Entrance Exam Preparation',
+      description: 'Guidance on exam patterns, preparation strategies, and mock tests.'
+    },
+    {
+      step: '04',
+      title: 'Application Support',
+      description: 'Assistance with filling forms, uploading documents, and fee payment.'
+    },
+    {
+      step: '05',
+      title: 'Counseling Guidance',
+      description: 'Support during choice filling, seat allocation, and document verification.'
+    },
+    {
+      step: '06',
+      title: 'Admission Confirmation',
+      description: 'Help with final admission formalities, fee payment, and enrollment.'
+    }
+  ];
+
+  const institutions = [
+    { name: 'IITs', count: '23', icon: '🏛️' },
+    { name: 'NITs', count: '31', icon: '🎓' },
+    { name: 'IIITs', count: '25', icon: '💻' },
+    { name: 'Medical Colleges', count: '500+', icon: '⚕️' },
+    { name: 'Management Institutes', count: '300+', icon: '📊' },
+    { name: 'State Universities', count: '1000+', icon: '🏫' }
+  ];
+
+  const faqs = [
+    {
+      question: 'What types of Indian institutions do you assist with?',
+      answer: 'We provide admission guidance for IITs, NITs, IIITs, AIIMS, government and private medical colleges, IIMs, top management institutes, central and state universities, and deemed universities across India.'
+    },
+    {
+      question: 'Do you help with entrance exam preparation?',
+      answer: 'Yes, we provide guidance on exam patterns, preparation strategies, and recommended study materials for JEE Main/Advanced, NEET, CAT, CLAT, GATE, and other competitive exams. We also conduct mock tests and counseling sessions.'
+    },
+    {
+      question: 'What is the counseling process for IITs and NITs?',
+      answer: 'After JEE Main/Advanced results, eligible candidates participate in JoSAA (Joint Seat Allocation Authority) counseling. We guide you through registration, choice filling, mock seat allocation, document verification, and final seat acceptance.'
+    },
+    {
+      question: 'Can you assist with management quota admissions?',
+      answer: 'Yes, we provide complete support for management quota admissions in private engineering and medical colleges, including eligibility verification, documentation, fee structure guidance, and direct college liaison.'
+    },
+    {
+      question: 'What documents are required for Indian college admissions?',
+      answer: 'Typically required documents include Class 10 & 12 mark sheets, entrance exam scorecards, transfer certificate, migration certificate, caste certificate (if applicable), domicile certificate, Aadhar card, passport-size photographs, and income certificate.'
+    },
+    {
+      question: 'How early should I start the admission process?',
+      answer: 'We recommend starting 6-8 months before entrance exams. This allows adequate time for exam preparation, understanding admission procedures, gathering documents, and making informed decisions during counseling.'
+    }
+  ];
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setErrors({ ...errors, email: 'Please enter a valid email address' });
+      return;
+    }
+
+    // Phone validation
+    if (formData.phone.replace(/[\s\-+]/g, '').length < 10) {
+      setErrors({ ...errors, phone: 'Please enter a valid phone number' });
+      return;
+    }
+
+    console.log('Form submitted:', formData);
+    setIsEnquiryOpen(true);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+
+    // Validation logic
+    if (name === 'name') {
+      // Only allow letters and spaces
+      if (!/^[A-Za-z\s]*$/.test(value)) {
+        return; // Don't update if invalid
+      }
+    }
+
+    if (name === 'phone') {
+      // Only allow numbers
+      if (!/^[0-9]*$/.test(value)) {
+        return; // Don't update if invalid
+      }
+    }
+
+    setFormData(prev => ({ ...prev, [name]: value }));
+
+    // Clear error when user types
+    setErrors({
+      ...errors,
+      [name]: ''
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-white">
+      <Navigation onEnquiryClick={() => setIsEnquiryOpen(true)} activePage="services" />
+
+      {/* Breadcrumb Navigation */}
+      <div className="bg-gray-50 border-b border-gray-200 mt-[72px]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center gap-2 text-sm">
+            <a href="/" className="text-gray-600 hover:text-[#2b2d72] transition-colors">
+              Home
+            </a>
+            <ChevronDown className="w-4 h-4 text-gray-400 -rotate-90" />
+            <a href="/#services" className="text-gray-600 hover:text-[#2b2d72] transition-colors">
+              Services
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-[#0A2472] via-[#1A3A8F] to-[#0A2472] text-white py-20 overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6">
+                <GraduationCap className="w-4 h-4" />
+                <span className="text-sm font-semibold">Top Indian Institutions</span>
+              </div>
+
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                India Admission <span className="text-[#F4C430]">Guidance</span>
+              </h1>
+
+              <p className="text-lg md:text-xl text-white/80 mb-8 leading-relaxed">
+                Expert support for admissions to IITs, NITs, IIITs, medical colleges, management institutes, and top universities across India.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={() => setIsEnquiryOpen(true)}
+                  className="bg-gradient-to-r from-[#F4C430] to-[#F4A430] text-[#0A2472] px-8 py-4 rounded-lg font-semibold hover:shadow-xl transition-all flex items-center justify-center gap-2"
+                >
+                  Start Your Journey
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+                <a
+                  href="#contact-form"
+                  className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-[#0A2472] transition-all text-center"
+                >
+                  Get Free Consultation
+                </a>
+              </div>
+            </div>
+
+            <div className="hidden lg:block">
+              <div className="grid grid-cols-2 gap-4">
+                {institutions.map((inst, index) => (
+                  <div
+                    key={index}
+                    className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 hover:bg-white/20 transition-all"
+                  >
+                    <div className="text-4xl mb-3">{inst.icon}</div>
+                    <div className="text-2xl font-bold text-[#F4C430] mb-1">{inst.count}</div>
+                    <div className="text-sm text-white/80">{inst.name}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Key Benefits */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#000000] mb-4">
+              Why Choose Our India Admission Services
+            </h2>
+            <p className="text-lg text-[#000000] max-w-3xl mx-auto">
+              Comprehensive support for every step of your admission journey to top Indian institutions
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {benefits.map((benefit, index) => (
+              <div
+                key={index}
+                className="bg-gradient-to-br from-[#EFF6FF] to-[#DBEAFE] rounded-xl p-8 hover:shadow-xl transition-all border border-[#E5E9F2]"
+              >
+                <div className="w-14 h-14 bg-gradient-to-br from-[#1A73E8] to-[#0D5DBD] rounded-lg flex items-center justify-center text-white mb-6">
+                  {benefit.icon}
+                </div>
+                <h3 className="text-xl font-bold text-[#000000] mb-3">{benefit.title}</h3>
+                <p className="text-[#000000] leading-relaxed">{benefit.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Process Section */}
+      <section className="py-20 bg-gradient-to-br from-[#EFF6FF] via-white to-[#DBEAFE]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#000000] mb-4">
+              Our Admission Process
+            </h2>
+            <p className="text-lg text-[#000000] max-w-3xl mx-auto">
+              A streamlined, step-by-step approach to secure your admission in top Indian institutions
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {process.map((item, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all border-t-4 border-[#F4C430]"
+              >
+                <div className="text-5xl font-bold text-[#F4C430] mb-4 opacity-50">{item.step}</div>
+                <h3 className="text-xl font-bold text-[#000000] mb-3">{item.title}</h3>
+                <p className="text-[#000000] leading-relaxed">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Supported Courses & Institutions */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#000000] mb-4">
+              Courses & Institutions We Cover
+            </h2>
+            <p className="text-lg text-[#000000] max-w-3xl mx-auto">
+              Access to India's premier educational institutions across multiple disciplines
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-gradient-to-br from-[#0A2472] to-[#1A3A8F] rounded-xl p-8 text-white">
+              <Building2 className="w-12 h-12 text-[#F4C430] mb-6" />
+              <h3 className="text-2xl font-bold mb-6">Engineering & Technology</h3>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#F4C430] flex-shrink-0 mt-1" />
+                  <span>IITs (Indian Institutes of Technology)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#F4C430] flex-shrink-0 mt-1" />
+                  <span>NITs (National Institutes of Technology)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#F4C430] flex-shrink-0 mt-1" />
+                  <span>IIITs (Indian Institutes of Information Technology)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#F4C430] flex-shrink-0 mt-1" />
+                  <span>State Engineering Colleges</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#F4C430] flex-shrink-0 mt-1" />
+                  <span>Private Universities (VIT, SRM, Manipal, etc.)</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-gradient-to-br from-[#1A73E8] to-[#0D5DBD] rounded-xl p-8 text-white">
+              <Award className="w-12 h-12 text-[#F4C430] mb-6" />
+              <h3 className="text-2xl font-bold mb-6">Medical & Healthcare</h3>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#F4C430] flex-shrink-0 mt-1" />
+                  <span>AIIMS (All India Institute of Medical Sciences)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#F4C430] flex-shrink-0 mt-1" />
+                  <span>Government Medical Colleges</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#F4C430] flex-shrink-0 mt-1" />
+                  <span>Private Medical Colleges</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#F4C430] flex-shrink-0 mt-1" />
+                  <span>Dental Colleges (BDS, MDS)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#F4C430] flex-shrink-0 mt-1" />
+                  <span>Nursing & Allied Health Sciences</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-gradient-to-br from-[#F4C430] to-[#F4A430] rounded-xl p-8 text-[#0A2472]">
+              <BookOpen className="w-12 h-12 text-[#0A2472] mb-6" />
+              <h3 className="text-2xl font-bold mb-6">Management & Business</h3>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#0A2472] flex-shrink-0 mt-1" />
+                  <span>IIMs (Indian Institutes of Management)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#0A2472] flex-shrink-0 mt-1" />
+                  <span>Faculty of Management Studies (FMS)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#0A2472] flex-shrink-0 mt-1" />
+                  <span>XLRI, SPJIMR, MDI, IMT</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#0A2472] flex-shrink-0 mt-1" />
+                  <span>ISB (Indian School of Business)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#0A2472] flex-shrink-0 mt-1" />
+                  <span>Top Private B-Schools</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-gradient-to-br from-[#1A3A8F] to-[#0A2472] rounded-xl p-8 text-white">
+              <Star className="w-12 h-12 text-[#F4C430] mb-6" />
+              <h3 className="text-2xl font-bold mb-6">Law & Humanities</h3>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#F4C430] flex-shrink-0 mt-1" />
+                  <span>National Law Universities (NLUs)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#F4C430] flex-shrink-0 mt-1" />
+                  <span>Delhi University, JNU, BHU</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#F4C430] flex-shrink-0 mt-1" />
+                  <span>Central & State Universities</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#F4C430] flex-shrink-0 mt-1" />
+                  <span>Arts, Science & Commerce Programs</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-[#F4C430] flex-shrink-0 mt-1" />
+                  <span>Mass Communication & Design Institutes</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQs */}
+      <section className="py-20 bg-gradient-to-br from-[#EFF6FF] via-white to-[#DBEAFE]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#000000] mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-lg text-[#000000]">
+              Get answers to common questions about India admissions
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {faqs.map((faq, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl shadow-md overflow-hidden border border-[#E5E9F2]"
+              >
+                <button
+                  onClick={() => setActiveAccordion(activeAccordion === index ? null : index)}
+                  className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-[#EFF6FF] transition-colors"
+                >
+                  <span className="font-semibold text-[#000000] pr-4">{faq.question}</span>
+                  <ChevronDown
+                    className={`w-5 h-5 text-[#1A73E8] flex-shrink-0 transition-transform ${
+                      activeAccordion === index ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+                {activeAccordion === index && (
+                  <div className="px-6 pb-5 text-[#000000] leading-relaxed">
+                    {faq.answer}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-br from-[#0A2472] via-[#1A3A8F] to-[#0A2472] text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+        </div>
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <GraduationCap className="w-16 h-16 text-[#F4C430] mx-auto mb-6" />
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            Ready to Start Your India Admission Journey?
+          </h2>
+          <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
+            Get expert guidance from our experienced counselors and secure your seat in India's top institutions.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={() => setIsEnquiryOpen(true)}
+              className="bg-gradient-to-r from-[#F4C430] to-[#F4A430] text-[#0A2472] px-8 py-4 rounded-lg font-semibold hover:shadow-xl transition-all inline-flex items-center justify-center gap-2"
+            >
+              Schedule Free Consultation
+              <ArrowRight className="w-5 h-5" />
+            </button>
+            <a
+              href="tel:+919876543210"
+              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-[#0A2472] transition-all inline-flex items-center justify-center gap-2"
+            >
+              <Phone className="w-5 h-5" />
+              Call Us Now
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form */}
+      <section id="contact-form" className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#000000] mb-4">
+              Get in Touch
+            </h2>
+            <p className="text-lg text-[#000000]">
+              Fill out the form below and our counselors will contact you within 24 hours
+            </p>
+          </div>
+
+          
+        </div>
+      </section>
+
+      {/* Contact Form */}
+      <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#2b2d72] to-[#1a1d4a] text-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Side - Info */}
+            <div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+                Start Your Journey Today
+              </h2>
+              <p className="text-xl text-white/90 mb-8 leading-relaxed">
+                Get in touch with our expert counselors for personalized guidance on India admission.
+              </p>
+
+              <div className="space-y-6">
+                {[
+                  { icon: Phone, text: '+91 72990 05577', label: 'Call Us' },
+                  { icon: Mail, text: 'salesteam@honeytranslations.com', label: 'Email Us' },
+                  { icon: Clock, text: 'Mon - Sat: 9 AM - 7 PM', label: 'Working Hours' }
+                ].map((item, index) => (
+                  <div key={index} className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
+                      <item.icon className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-white/70">{item.label}</p>
+                      <p className="font-semibold">{item.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8">
+                <a
+                  href="https://wa.me/917299005577"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-[#25D366] text-white rounded-full font-bold hover:shadow-2xl transition-all hover:-translate-y-1"
+                >
+                  <MessageCircle className="w-6 h-6" />
+                  <span>Chat on WhatsApp</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Right Side - Form */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
+              <h3 className="text-2xl font-bold mb-6">Request Free Consultation</h3>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="Your Full Name"
+                    required
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-white/40 transition-all"
+                  />
+                </div>
+                <div>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="Your Email Address"
+                    required
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-white/40 transition-all"
+                  />
+                </div>
+                <div>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    placeholder="Your Phone Number"
+                    required
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-white/40 transition-all"
+                  />
+                </div>
+                <div>
+                  <select
+                    name="course"
+                    value={formData.course}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-white/40 transition-all"
+                  >
+                    <option value="" className="text-gray-900">Select Course Interest</option>
+                    <option value="Engineering" className="text-gray-900">Engineering</option>
+                    <option value="Medical" className="text-gray-900">Medical</option>
+                    <option value="Business" className="text-gray-900">Business Management</option>
+                    <option value="IT" className="text-gray-900">Information Technology</option>
+                    <option value="Other" className="text-gray-900">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    placeholder="Your Message (Optional)"
+                    rows={3}
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-white/40 transition-all resize-none"
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full py-4 bg-white text-[#2b2d72] rounded-xl font-bold hover:shadow-2xl transition-all hover:-translate-y-1 flex items-center justify-center gap-2"
+                >
+                  <span>Submit Application</span>
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Floating WhatsApp Button */}
+      <a
+        href="https://wa.me/917299005577"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-8 right-8 w-16 h-16 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-2xl hover:scale-110 transition-transform z-50 animate-pulse"
+      >
+        <MessageCircle className="w-8 h-8" />
+      </a>
+
+      <Footer />
+      <EnquiryPopup isOpen={isEnquiryOpen} onClose={() => setIsEnquiryOpen(false)} />
+    </div>
+  );
+}
