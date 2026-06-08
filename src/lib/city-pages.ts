@@ -85,6 +85,9 @@ function createPool() {
     waitForConnections: true,
     connectionLimit: config.connectionLimit,
     charset: "utf8mb4",
+    ssl: {
+      rejectUnauthorized: false
+    }
   });
 
   return pool;
