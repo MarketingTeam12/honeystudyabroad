@@ -143,6 +143,7 @@ export function SeoHead({
   return (
     <Head>
       <title>{finalTitle}</title>
+      <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
       <meta name="description" content={description} />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="robots" content={robotsContent} />
