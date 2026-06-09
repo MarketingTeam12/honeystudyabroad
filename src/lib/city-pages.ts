@@ -32,6 +32,7 @@ type ColumnDefinitionRow = RowDataPacket & {
 
 let pool: Pool | null = null;
 let pagesTableColumnsPromise: Promise<Set<string>> | null = null;
+let databaseInitializationPromise: Promise<Pool> | null = null;
 
 const HERO_IMAGE_COLUMN_CANDIDATES = [
   "hero_image",
@@ -45,37 +46,151 @@ function env(name: string) {
   return process.env[name]?.toString().trim() || "";
 }
 
-function getPool() {
+function getDatabaseConfig() {
+  const host = env("MYSQL_HOST");
+  const user = env("MYSQL_USER");
+  const database = env("MYSQL_DATABASE");
+  const port = Number(env("MYSQL_PORT") || "3306");
+  const connectionLimit = Number(env("MYSQL_CONNECTION_LIMIT") || "10");
+
+  return {
+    host,
+    user,
+    database,
+    port,
+    connectionLimit,
+    hasPassword: Boolean(env("MYSQL_PASSWORD")),
+  };
+}
+
+function createPool() {
   if (pool) {
     return pool;
   }
 
-  const host = env("MYSQL_HOST");
-  const user = env("MYSQL_USER");
-  const database = env("MYSQL_DATABASE");
+  const config = getDatabaseConfig();
 
-  if (!host || !user || !database) {
+  if (!config.host || !config.user || !config.database) {
     throw new Error(
       "MySQL is not configured. Set MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, and MYSQL_DATABASE.",
     );
   }
 
   pool = mysql.createPool({
-    host,
-    port: Number(env("MYSQL_PORT") || "3306"),
-    user,
+    host: config.host,
+    port: config.port,
+    user: config.user,
     password: env("MYSQL_PASSWORD"),
-    database,
+    database: config.database,
     waitForConnections: true,
-    connectionLimit: Number(env("MYSQL_CONNECTION_LIMIT") || "10"),
+    connectionLimit: config.connectionLimit,
     charset: "utf8mb4",
   });
 
   return pool;
 }
 
+function logDatabaseStatus(
+  status: "initializing" | "connected" | "failed" | "not-configured",
+  details: Record<string, unknown>,
+) {
+  const message = `[db:city-pages] ${status}`;
+
+  if (status === "failed" || status === "not-configured") {
+    console.error(message, details);
+    return;
+  }
+
+  console.info(message, details);
+}
+
+async function initializeDatabaseConnection() {
+  if (databaseInitializationPromise) {
+    return databaseInitializationPromise;
+  }
+
+  databaseInitializationPromise = (async () => {
+    const config = getDatabaseConfig();
+
+    if (!config.host || !config.user || !config.database) {
+      throw new Error(
+        "MySQL is not configured. Set MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, and MYSQL_DATABASE.",
+      );
+    }
+
+    const startedAt = Date.now();
+    const currentPool = createPool();
+
+    logDatabaseStatus("initializing", {
+      status: "initializing",
+      host: config.host,
+      user: config.user,
+      database: config.database,
+      port: config.port,
+      connectionLimit: config.connectionLimit,
+      waitForConnections: true,
+      charset: "utf8mb4",
+      hasPassword: config.hasPassword,
+      timestamp: new Date().toISOString(),
+    });
+
+    const connection = await currentPool.getConnection();
+    const threadId = connection.threadId;
+
+    try {
+      await connection.ping();
+    } finally {
+      connection.release();
+    }
+
+    logDatabaseStatus("connected", {
+      status: "connected",
+      host: config.host,
+      user: config.user,
+      database: config.database,
+      port: config.port,
+      connectionLimit: config.connectionLimit,
+      waitForConnections: true,
+      charset: "utf8mb4",
+      threadId,
+      elapsedMs: Date.now() - startedAt,
+      timestamp: new Date().toISOString(),
+    });
+
+    return currentPool;
+  })().catch((error) => {
+    databaseInitializationPromise = null;
+
+    const config = getDatabaseConfig();
+    const isNotConfigured =
+      error instanceof Error &&
+      error.message ===
+        "MySQL is not configured. Set MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, and MYSQL_DATABASE.";
+
+    logDatabaseStatus(isNotConfigured ? "not-configured" : "failed", {
+      status: isNotConfigured ? "not-configured" : "failed",
+      host: config.host || null,
+      user: config.user || null,
+      database: config.database || null,
+      port: config.port,
+      connectionLimit: config.connectionLimit,
+      waitForConnections: true,
+      charset: "utf8mb4",
+      hasPassword: config.hasPassword,
+      timestamp: new Date().toISOString(),
+      errorName: error instanceof Error ? error.name : "Error",
+      errorMessage: error instanceof Error ? error.message : String(error),
+    });
+
+    throw error;
+  });
+
+  return databaseInitializationPromise;
+}
+
 async function queryCityPages<T extends RowDataPacket>(query: string, values: unknown[] = []) {
-  const [rows] = await getPool().query<T[]>(query, values);
+  const dbPool = await initializeDatabaseConnection();
+  const [rows] = await dbPool.query<T[]>(query, values);
   return rows;
 }
 
@@ -296,6 +411,6 @@ export async function getCityPageSummaries(
 }
 
 export async function testDatabaseConnection() {
-  const [rows] = await getPool().query<RowDataPacket[]>("SELECT 1 AS ok");
-  return rows[0]?.ok === 1;
+  await initializeDatabaseConnection();
+  return true;
 }
