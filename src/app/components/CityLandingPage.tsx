@@ -240,11 +240,11 @@ function TrustedBrandsCarousel() {
   return (
     <section className="overflow-hidden bg-white py-8 sm:py-10">
       <div className="relative">
-        <div className="mx-auto max-w-[1280px] overflow-hidden rounded-[1.4rem] border border-slate-200/80 bg-white py-4 shadow-[0_10px_26px_rgba(15,23,42,0.07)] sm:py-5">
+        <div className="mx-auto w-full overflow-hidden bg-white py-4 sm:py-5 ">
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-white via-white to-transparent sm:w-12" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-white via-white to-transparent sm:w-12" />
 
-          <div className="flex items-center gap-1 animate-marquee will-change-transform px-1 sm:gap-2 sm:px-2 lg:gap-2 lg:px-3" style={{ width: "max-content" }}>
+          <div className="min-h-[200px] flex items-center gap-1 animate-marquee will-change-transform px-1 sm:gap-2 sm:px-2 lg:gap-4 lg:px-3" style={{ width: "max-content" }}>
           {doubledBrands.map((brand, index) => (
             <div
               key={`${brand.name}-${index}`}
