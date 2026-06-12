@@ -163,6 +163,16 @@ export function SeoHead({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={imageUrl} />
 
+      <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-F62WCKN2YQ"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-F62WCKN2YQ');
+      </script>
+
       {structuredData.map((entry, index) => (
         <script
           key={`${canonicalUrl}-jsonld-${index}`}
