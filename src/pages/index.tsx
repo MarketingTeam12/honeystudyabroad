@@ -34,6 +34,14 @@ export default function HomePage({ siteUrl }: InferGetServerSidePropsType<typeof
           buildWebsiteSchema(siteUrl),
         ]}
       />
+      <noscript>
+        <iframe
+          src="https://www.googletagmanager.com/ns.html?id=GTM-MP3J3QNH"
+          height="0"
+          width="0"
+          style={{ display: "none", visibility: "hidden" }}
+        />
+      </noscript>
       <StudyAbroadApp />
     </>
   );
