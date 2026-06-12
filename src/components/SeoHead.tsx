@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Script from "next/script";
 
 type StructuredData = Record<string, unknown>;
 
@@ -141,6 +142,7 @@ export function SeoHead({
   const robotsContent = noIndex ? "noindex,nofollow" : "index,follow,max-image-preview:large";
 
   return (
+    <>
     <Head>
       <title>{finalTitle}</title>
       <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
@@ -163,16 +165,6 @@ export function SeoHead({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={imageUrl} />
 
-      <!-- Google tag (gtag.js) -->
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-F62WCKN2YQ"></script>
-      <script>
-        window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-F62WCKN2YQ');
-      </script>
-
       {structuredData.map((entry, index) => (
         <script
           key={`${canonicalUrl}-jsonld-${index}`}
@@ -181,5 +173,20 @@ export function SeoHead({
         />
       ))}
     </Head>
+
+    <Script
+      src="https://www.googletagmanager.com/gtag/js?id=G-F62WCKN2YQ"
+      strategy="afterInteractive"
+    />
+
+    <Script id="google-analytics" strategy="afterInteractive">
+      {`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-F62WCKN2YQ');
+      `}
+    </Script>
+  </>
   );
 }
