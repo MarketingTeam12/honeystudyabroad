@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react';
+import { getUniversityDetailUrl } from '../utils/universityUtils';
 
 interface University {
   name: string;
@@ -43,8 +44,8 @@ const universities: University[] = [
 ];
 
 export function UniversitiesPage() {
-  const handleUniversityClick = (searchUrl: string) => {
-    window.open(searchUrl, '_blank');
+  const handleUniversityClick = (universityName: string) => {
+    window.location.href = getUniversityDetailUrl(universityName);
   };
 
   return (
@@ -65,7 +66,7 @@ export function UniversitiesPage() {
             {universities.map((university, index) => (
               <div
                 key={index}
-                onClick={() => handleUniversityClick(university.searchUrl)}
+                onClick={() => handleUniversityClick(university.name)}
                 className="w-80 bg-white rounded-2xl overflow-hidden shadow-[0px_8px_32px_rgba(0,0,0,0.12)] hover:shadow-[0px_12px_40px_rgba(0,0,0,0.18)] transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
               >
                 <div className="relative h-48 overflow-hidden">

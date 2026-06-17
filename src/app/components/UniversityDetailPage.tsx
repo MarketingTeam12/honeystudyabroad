@@ -4,7 +4,7 @@ import {
   Globe, Building2, Menu, X, ChevronDown, Clock
 } from 'lucide-react';
 import { getUniversityBySlug, DEFAULT_UNIVERSITY } from '../data/universityData';
-import honeyLogo from '../../imports/Artboard_1_copy_1.png';
+import { HeaderBrandLogo } from './HeaderBrandLogo';
 
 interface UniversityDetailProps {
   universityId: string;
@@ -21,15 +21,10 @@ export function UniversityDetailPage({ universityId }: UniversityDetailProps) {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 bg-white shadow-sm z-50 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-[92px]">
             {/* Logo */}
-            <a href="#home" className="flex items-center">
-              <img
-                src={honeyLogo.src}
-                alt="Honey Translation Services"
-                className="h-10 sm:h-11 w-auto object-contain"
-                style={{ maxWidth: '200px' }}
-              />
+            <a href="#home" className="flex items-center group">
+              <HeaderBrandLogo className="group-hover:scale-105 transition-transform" />
             </a>
 
             {/* Desktop Navigation */}
@@ -85,7 +80,7 @@ export function UniversityDetailPage({ universityId }: UniversityDetailProps) {
       </nav>
 
       {/* Back Button */}
-      <div className="pt-20 pb-6 px-4 sm:px-6 lg:px-8">
+      <div className="pt-28 pb-6 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <button
             onClick={() => window.history.back()}

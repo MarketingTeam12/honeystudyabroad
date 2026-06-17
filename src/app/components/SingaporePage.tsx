@@ -3,6 +3,9 @@ import { useState, useRef, useEffect } from 'react';
 import { getUniversityDetailUrl } from '../utils/universityUtils';
 import { goToHome } from '../utils/rootNavigation';
 import { getCommonsImageUrl } from '../utils/imageUtils';
+import { HeaderBrandLogo } from './HeaderBrandLogo';
+import { CountryAdmissionTimeline } from './CountryAdmissionTimeline';
+import { CountryApplicationModal } from './CountryApplicationModal';
 import downloadImage from '@/imports/download.jpg';
 import {
   GraduationCap, Users, Globe, TrendingUp, Shield, ChevronDown, ChevronUp,
@@ -118,17 +121,11 @@ export function SingaporePage() {
       {/* Premium Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-b border-gray-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex justify-between items-center h-[92px]">
             {/* Logo */}
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#2b2d72] to-[#1a1d4a] rounded-xl flex items-center justify-center shadow-lg">
-                <GraduationCap className="w-7 h-7 text-white" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold text-[#2b2d72]">Study Singapore</span>
-                <span className="text-xs text-gray-500">Your Gateway to Excellence</span>
-              </div>
-            </div>
+            <button type="button" onClick={handleGoHome} className="flex items-center group">
+              <HeaderBrandLogo className="group-hover:scale-105 transition-transform" />
+            </button>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-8">
@@ -581,94 +578,7 @@ export function SingaporePage() {
         </div>
       </section>
 
-      {/* Admission Process */}
-      <section id="admission" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-[#2b2d72]">
-              Admission Process
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Your journey to Singapore in simple steps
-            </p>
-          </div>
-
-          <div className="relative">
-            <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#2b2d72] to-blue-300 transform -translate-x-1/2 hidden lg:block"></div>
-
-            <div className="space-y-12">
-              {[
-                {
-                  step: '1',
-                  title: 'Free Consultation',
-                  description: 'Connect with our expert counselors to discuss your goals and find the perfect program',
-                  icon: MessageCircle
-                },
-                {
-                  step: '2',
-                  title: 'University Selection',
-                  description: 'We help you choose the best universities and courses based on your profile',
-                  icon: Building2
-                },
-                {
-                  step: '3',
-                  title: 'Application Preparation',
-                  description: 'Complete guidance on documents, essays, and application submission',
-                  icon: FileText
-                },
-                {
-                  step: '4',
-                  title: 'Admission Confirmation',
-                  description: 'Receive your offer letter and guidance on acceptance procedures',
-                  icon: CheckCircle
-                },
-                {
-                  step: '5',
-                  title: 'Visa Processing',
-                  description: 'End-to-end visa assistance ensuring smooth approval',
-                  icon: Shield
-                },
-                {
-                  step: '6',
-                  title: 'Pre-Departure Support',
-                  description: 'Orientation, accommodation, and travel arrangements',
-                  icon: Target
-                }
-              ].map((item, index) => (
-                <div key={index} className={`relative flex items-center gap-8 ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}>
-                  <div className={`flex-1 ${index % 2 === 0 ? 'lg:text-right' : 'lg:text-left'}`}>
-                    <div className="inline-block bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all border border-gray-100">
-                      <h3 className="text-2xl font-bold text-[#2b2d72] mb-3">{item.title}</h3>
-                      <p className="text-gray-600 leading-relaxed">{item.description}</p>
-                    </div>
-                  </div>
-
-                  <div className="relative z-10 flex-shrink-0">
-                    <div className="w-16 h-16 bg-gradient-to-br from-[#2b2d72] to-[#1a1d4a] rounded-full flex items-center justify-center shadow-xl">
-                      <item.icon className="w-8 h-8 text-white" />
-                    </div>
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                      {item.step}
-                    </div>
-                  </div>
-
-                  <div className="flex-1 hidden lg:block"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="text-center mt-16">
-            <button
-              onClick={() => setIsEnquiryOpen(true)}
-              className="px-8 py-4 bg-gradient-to-r from-[#2b2d72] to-[#1a1d4a] text-white rounded-full font-bold hover:shadow-xl transition-all hover:-translate-y-1"
-            >
-              Start Your Application
-            </button>
-          </div>
-        </div>
-      </section>
-
+      <CountryAdmissionTimeline countryName="Singapore" sectionId="admission" />
       {/* Required Documents */}
       <section id="documents" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-7xl mx-auto">
@@ -1215,81 +1125,16 @@ export function SingaporePage() {
         <MessageCircle className="w-8 h-8" />
       </a>
 
-      {/* Enquiry Popup */}
-      {isEnquiryOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl relative border border-gray-100">
-            <button
-              onClick={() => setIsEnquiryOpen(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-all"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-[#2b2d72] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#2b2d72]/25">
-                <GraduationCap className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-3xl font-bold text-[#2b2d72] mb-2">Quick Enquiry</h3>
-              <p className="text-gray-500 text-sm">We'll get back to you within 24 hours</p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label htmlFor="name" className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                  Full Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Enter your full name"
-                  required
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                  Email Address <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="your.email@example.com"
-                  required
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                />
-              </div>
-              <div>
-                <label htmlFor="phone" className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                  Phone Number <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  placeholder="+91 98765 43210"
-                  required
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full py-4 bg-[#2b2d72] hover:bg-[#1a1d4a] text-white rounded-xl font-bold text-base shadow-lg shadow-[#2b2d72]/20 hover:shadow-xl hover:shadow-[#2b2d72]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                Submit Enquiry
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+      <CountryApplicationModal
+        isOpen={isEnquiryOpen}
+        onClose={() => setIsEnquiryOpen(false)}
+        countryName="Singapore"
+        mode="apply"
+      />
     </div>
   );
 }
+
+
+
+

@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { getUniversityDetailUrl } from '../utils/universityUtils';
 import { goToCountries, goToHome } from '../utils/rootNavigation';
+import { HeaderBrandLogo } from './HeaderBrandLogo';
+import { CountryApplicationModal } from './CountryApplicationModal';
+import { CountryAdmissionTimeline } from './CountryAdmissionTimeline';
 import waterlooImage from '@/imports/Waterloo.jpg';
 import {
   ArrowLeft,
@@ -455,15 +458,10 @@ export function CanadaPageAccordion() {
       {/* Premium Navbar */}
       <nav className="bg-white/80 backdrop-blur-lg border-b border-gray-100 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#2b2d72] rounded-lg flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-white" />
-              </div>
-              <div className="text-lg sm:text-[22px] font-bold text-[#2b2d72]">
-                StudyAbroad Pro
-              </div>
-            </div>
+          <div className="flex items-center justify-between h-[92px]">
+            <button type="button" onClick={goToHome} className="flex items-center group">
+              <HeaderBrandLogo className="group-hover:scale-105 transition-transform" />
+            </button>
             <div className="flex items-center gap-8">
               <a
                 href="/#home"
@@ -1209,11 +1207,11 @@ export function CanadaPageAccordion() {
                 </div>
               </button>
 
-              <div
-                className={`overflow-hidden transition-all duration-500 ${
-                  activeAccordion === 'faq' ? 'max-h-[1500px] opacity-100' : 'max-h-0 opacity-0'
-                }`}
-              >
+            <div
+              className={`overflow-hidden transition-all duration-500 ${
+                activeAccordion === 'faq' ? 'max-h-[1500px] opacity-100' : 'max-h-0 opacity-0'
+              }`}
+            >
                 <div className="p-6 pt-0 border-t border-gray-100">
                   <div className="space-y-4 mt-6">
                     {faqs.map((faq, index) => (
@@ -1230,6 +1228,8 @@ export function CanadaPageAccordion() {
               </div>
             </div>
           </div>
+
+          <CountryAdmissionTimeline countryName="Canada" sectionId="admission-process" />
         </div>
       </section>
 
@@ -1410,107 +1410,15 @@ export function CanadaPageAccordion() {
         <MessageCircle className="w-8 h-8" />
       </a>
 
-      {/* Enquiry Popup */}
-      {isEnquiryOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-8 relative shadow-2xl border border-gray-100">
-            <button
-              onClick={() => setIsEnquiryOpen(false)}
-              className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-all"
-            >
-              <span className="text-[24px]">×</span>
-            </button>
-
-            <div className="w-16 h-16 bg-[#2b2d72] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#2b2d72]/25">
-              <GraduationCap className="w-8 h-8 text-white" />
-            </div>
-
-            <div className="mb-6 text-center">
-              <h3 className="text-3xl font-bold text-[#2b2d72] mb-2">Send Enquiry</h3>
-              <p className="text-gray-500 text-sm">
-                Our expert counselors will contact you within 24 hours
-              </p>
-            </div>
-
-            <form onSubmit={handleFormSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">Full Name *</label>
-                  <input
-                    type="text"
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                    placeholder="Enter your name"
-                  />
-                  {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
-                </div>
-                <div>
-                  <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">Email *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                    placeholder="your.email@example.com"
-                  />
-                  {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">Phone *</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    required
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                    placeholder="+91 98765 43210"
-                  />
-                  {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
-                </div>
-                <div>
-                  <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">Course</label>
-                  <input
-                    type="text"
-                    name="course"
-                    value={formData.course}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                    placeholder="e.g., MBA, Engineering"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">Message</label>
-                <textarea
-                  rows={4}
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium resize-none"
-                  placeholder="Tell us about your study plans..."
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-4 bg-[#2b2d72] hover:bg-[#1a1d4a] text-white rounded-xl font-bold text-base shadow-lg shadow-[#2b2d72]/20 hover:shadow-xl hover:shadow-[#2b2d72]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                <Send className="w-5 h-5" />
-                Submit Enquiry
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+      <CountryApplicationModal
+        isOpen={isEnquiryOpen}
+        onClose={() => setIsEnquiryOpen(false)}
+        countryName="Canada"
+        mode="apply"
+      />
     </div>
   );
 }
+
+
+

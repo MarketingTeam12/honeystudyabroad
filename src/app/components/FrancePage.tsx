@@ -2,6 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import { getUniversityDetailUrl } from '../utils/universityUtils';
 import { goToHome } from '../utils/rootNavigation';
 import { getCommonsImageUrl } from '../utils/imageUtils';
+import { HeaderBrandLogo } from './HeaderBrandLogo';
+import { CountryAdmissionTimeline } from './CountryAdmissionTimeline';
+import { CountryApplicationModal } from './CountryApplicationModal';
 import {
   ArrowLeft, GraduationCap, Users, Clock, Award, DollarSign,
   FileText, Globe, TrendingUp, Shield, ChevronDown, ChevronUp,
@@ -149,16 +152,11 @@ export function FrancePage() {
       {/* Sticky Navbar */}
       <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-lg border-b border-[#DCE3F1] shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex justify-between items-center h-[92px]">
             {/* Logo */}
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#001489] to-[#ED2939] rounded-xl flex items-center justify-center shadow-lg">
-                <GraduationCap className="w-7 h-7 text-white" />
-              </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-[#356AE6] to-[#2447B8] bg-clip-text text-transparent">
-                Study in France
-              </span>
-            </div>
+            <button type="button" onClick={handleGoHome} className="flex items-center group">
+              <HeaderBrandLogo className="group-hover:scale-105 transition-transform" />
+            </button>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-8">
@@ -1285,122 +1283,7 @@ export function FrancePage() {
             </div>
           </div>
 
-          {/* Admission Process */}
-          <div id="admission-process" className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-[#DCE3F1] scroll-mt-24">
-            <button
-              onClick={() => toggleAccordion('admission-process')}
-              className="w-full px-8 py-6 flex justify-between items-center hover:bg-gradient-to-r hover:from-[#EEF4FF] hover:to-[#DBEAFE] transition-all"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#06B6D4] to-[#0891B2] rounded-xl flex items-center justify-center">
-                  <CheckCircle className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-[#2b2d72]">Admission Process</h3>
-              </div>
-              {activeAccordion === 'admission-process' ? (
-                <ChevronUp className="w-6 h-6 text-[#2b2d72]" />
-              ) : (
-                <ChevronDown className="w-6 h-6 text-gray-600" />
-              )}
-            </button>
-
-            <div
-              className={`transition-all duration-500 ease-in-out ${
-                activeAccordion === 'admission-process'
-                  ? 'max-h-[3000px] opacity-100'
-                  : 'max-h-0 opacity-0 overflow-hidden'
-              }`}
-            >
-              <div className="px-8 pb-8">
-                <div className="relative">
-                  {[
-                    {
-                      phase: 'Research Phase',
-                      duration: '2-3 months before',
-                      tasks: ['Research universities and programs', 'Check eligibility requirements', 'Understand tuition and living costs', 'Explore scholarship opportunities']
-                    },
-                    {
-                      phase: 'Application Preparation',
-                      duration: '4-6 months before',
-                      tasks: ['Gather all required documents', 'Take language proficiency tests', 'Write Statement of Purpose', 'Obtain Letters of Recommendation', 'Prepare financial documents']
-                    },
-                    {
-                      phase: 'Campus France Process',
-                      duration: '3-5 months before',
-                      tasks: ['Create Campus France account', 'Complete online profile', 'Upload all documents', 'Pay Campus France fee', 'Schedule pedagogical interview']
-                    },
-                    {
-                      phase: 'University Application',
-                      duration: '2-4 months before',
-                      tasks: ['Submit applications through Campus France', 'Apply directly to universities (if applicable)', 'Pay application fees', 'Track application status', 'Wait for admission decisions']
-                    },
-                    {
-                      phase: 'Acceptance & Visa',
-                      duration: '1-2 months before',
-                      tasks: ['Accept university offer', 'Pay tuition deposit', 'Apply for student visa', 'Attend visa interview', 'Receive visa approval']
-                    },
-                    {
-                      phase: 'Pre-Departure',
-                      duration: 'Few weeks before',
-                      tasks: ['Book flight tickets', 'Arrange accommodation', 'Purchase travel insurance', 'Prepare for arrival', 'OFII validation upon arrival']
-                    }
-                  ].map((step, index) => (
-                    <div key={index} className="relative pl-8 pb-8 last:pb-0">
-                      {index !== 5 && (
-                        <div className="absolute left-[11px] top-[40px] bottom-0 w-0.5 bg-gradient-to-b from-[#356AE6] to-[#2447B8]"></div>
-                      )}
-                      <div className="absolute left-0 top-0 w-6 h-6 bg-gradient-to-br from-[#356AE6] to-[#2447B8] rounded-full flex items-center justify-center">
-                        <span className="text-white text-xs font-bold">{index + 1}</span>
-                      </div>
-                      <div className="bg-white/50 rounded-xl p-6 border border-[#DCE3F1]">
-                        <div className="flex items-center justify-between mb-3">
-                          <h4 className="text-lg font-bold text-[#2b2d72]">{step.phase}</h4>
-                          <span className="text-xs font-medium text-[#2b2d72] bg-[#EEF4FF] px-3 py-1 rounded-full">
-                            {step.duration}
-                          </span>
-                        </div>
-                        <ul className="space-y-2">
-                          {step.tasks.map((task, i) => (
-                            <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                              <CheckCircle className="w-4 h-4 text-[#10B981] flex-shrink-0 mt-0.5" />
-                              <span>{task}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6 p-6 bg-gradient-to-r from-[#EEF4FF] to-[#DBEAFE] rounded-2xl border-2 border-[#356AE6]/30">
-                  <h5 className="text-lg font-bold text-[#2b2d72] mb-3 flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-[#2b2d72]" />
-                    Pro Tips
-                  </h5>
-                  <ul className="space-y-2 text-gray-600">
-                    <li className="flex items-start gap-2">
-                      <span className="text-[#2b2d72] font-bold">•</span>
-                      <span>Start the process at least 12 months before your intended intake date</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-[#2b2d72] font-bold">•</span>
-                      <span>Campus France process is mandatory and takes 2-4 months</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-[#2b2d72] font-bold">•</span>
-                      <span>Apply to multiple universities to increase acceptance chances</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-[#2b2d72] font-bold">•</span>
-                      <span>Keep in touch with our consultants throughout the process for guidance</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* FAQ */}
+      {/* FAQ */}
           <div id="faq" className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-[#DCE3F1] scroll-mt-24">
             <button
               onClick={() => toggleAccordion('faq')}
@@ -1480,6 +1363,8 @@ export function FrancePage() {
               </div>
             </div>
           </div>
+
+          <CountryAdmissionTimeline countryName="France" sectionId="admission-process" />
         </div>
       </section>
 
@@ -1616,80 +1501,16 @@ export function FrancePage() {
         <MessageCircle className="w-8 h-8" />
       </a>
 
-      {/* Enquiry Popup */}
-      {isEnquiryOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl relative border border-gray-100">
-            <button
-              onClick={() => setIsEnquiryOpen(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-all"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
-            <div className="w-16 h-16 bg-[#2b2d72] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#2b2d72]/25">
-              <GraduationCap className="w-8 h-8 text-white" />
-            </div>
-
-            <h3 className="text-3xl font-bold text-[#2b2d72] mb-2 text-center">Quick Enquiry</h3>
-            <p className="text-gray-500 text-sm mb-6 text-center">Fill in your details and we'll get back to you soon</p>
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label htmlFor="name" className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                  Full Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Enter your full name"
-                  required
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                  Email Address <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="your.email@example.com"
-                  required
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                />
-              </div>
-              <div>
-                <label htmlFor="phone" className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                  Phone Number <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  placeholder="+91 98765 43210"
-                  required
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full py-4 bg-[#2b2d72] hover:bg-[#1a1d4a] text-white rounded-xl font-bold text-base shadow-lg shadow-[#2b2d72]/20 hover:shadow-xl hover:shadow-[#2b2d72]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                Submit Enquiry
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+      <CountryApplicationModal
+        isOpen={isEnquiryOpen}
+        onClose={() => setIsEnquiryOpen(false)}
+        countryName="France"
+        mode="apply"
+      />
     </div>
   );
 }
+
+
+
+

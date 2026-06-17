@@ -2,6 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import { getUniversityDetailUrl } from '../utils/universityUtils';
 import { goToCountries, goToHome } from '../utils/rootNavigation';
 import { SearchableCountrySelect } from './SearchableCountrySelect';
+import { HeaderBrandLogo } from './HeaderBrandLogo';
+import { CountryAdmissionTimeline } from './CountryAdmissionTimeline';
+import { CountryApplicationModal } from './CountryApplicationModal';
 import aucklandImage from '@/imports/University_of_Auckland.jpg';
 import {
   ArrowLeft,
@@ -377,15 +380,10 @@ export function NewZealandPage() {
       {/* Premium Navbar */}
       <nav className="bg-[#EEF4FF] backdrop-blur-lg border-b border-[#E5E9F2] sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#1E40AF] to-[#3B82F6] rounded-lg flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-white" />
-              </div>
-              <div className="text-[22px] font-bold bg-gradient-to-r from-[#1E40AF] to-[#3B82F6] bg-clip-text text-transparent">
-                StudyAbroad Pro
-              </div>
-            </div>
+          <div className="flex items-center justify-between h-[92px]">
+            <button type="button" onClick={goToHome} className="flex items-center group">
+              <HeaderBrandLogo className="group-hover:scale-105 transition-transform" />
+            </button>
             <div className="hidden md:flex items-center gap-8">
               <a
                 href="/#home"
@@ -467,7 +465,7 @@ export function NewZealandPage() {
 
               
               <button
-                onClick={() => window.dispatchEvent(new Event('openEnquiry'))}
+                onClick={() => setIsEnquiryOpen(true)}
                 className="px-6 py-2.5 bg-gradient-to-r from-[#1E40AF] to-[#3B82F6] text-white rounded-lg font-semibold text-[14px] hover:shadow-lg transition-all"
               >
                 Send Enquiry
@@ -552,7 +550,7 @@ export function NewZealandPage() {
                   Apply Now
                 </button>
                 <button
-                  onClick={() => window.dispatchEvent(new Event('openEnquiry'))}
+                  onClick={() => setIsEnquiryOpen(true)}
                   className="px-8 py-4 bg-gradient-to-r from-[#1E40AF] to-[#3B82F6] text-white rounded-xl font-semibold text-[16px] hover:shadow-2xl transition-all flex items-center gap-2 hover:-translate-y-1"
                 >
                   <Send className="w-5 h-5" />
@@ -882,6 +880,8 @@ export function NewZealandPage() {
         </div>
       </section>
 
+      <CountryAdmissionTimeline countryName="New Zealand" sectionId="admission-process" />
+
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-br from-[#1E40AF] to-[#3B82F6]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -894,7 +894,7 @@ export function NewZealandPage() {
 
           <div className="flex flex-wrap gap-4 justify-center">
             <button
-              onClick={() => window.dispatchEvent(new Event('openEnquiry'))}
+              onClick={() => setIsEnquiryOpen(true)}
               className="px-8 py-4 bg-white text-[#2b2d72] rounded-xl font-semibold text-[16px] hover:shadow-2xl transition-all flex items-center gap-2 hover:-translate-y-1"
             >
               <Send className="w-5 h-5" />
@@ -1041,199 +1041,15 @@ export function NewZealandPage() {
         <MessageCircle className="w-8 h-8" />
       </a>
 
-      {/* Apply Now Modal */}
-      {isApplyNowOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 overflow-y-auto">
-          <div className="min-h-screen flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl max-w-3xl w-full shadow-2xl relative border border-gray-100 my-8">
-              <button
-                onClick={() => setIsApplyNowOpen(false)}
-                className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-all z-10"
-              >
-                <X className="w-6 h-6" />
-              </button>
-
-              <div className="p-8">
-                <div className="text-center mb-8">
-                  <div className="w-16 h-16 bg-[#2b2d72] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#2b2d72]/25">
-                    <GraduationCap className="w-8 h-8 text-white" />
-                  </div>
-                  <h2 className="text-3xl font-bold text-[#2b2d72] mb-2">Apply Now – New Zealand</h2>
-                  <p className="text-gray-500 text-sm">Complete the form below to start your application process</p>
-                </div>
-
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    const subject = encodeURIComponent('New Zealand Application - ' + applyFormData.fullName);
-                    const body = encodeURIComponent(
-                      `Full Name: ${applyFormData.fullName}\nEmail: ${applyFormData.email}\nPhone: ${applyFormData.phone}\nCountry Preference: ${applyFormData.countryPreference}\nCourse Interested: ${applyFormData.courseInterested}\nQualification: ${applyFormData.qualification}\n\nMessage:\n${applyFormData.message}`
-                    );
-                    window.location.href = `mailto:salesteam@honeytranslations.com?subject=${subject}&body=${body}`;
-                  }}
-                  className="space-y-6"
-                >
-                  {/* Row 1: Full Name & Email */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                        Full Name <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={applyFormData.fullName}
-                        onChange={(e) => setApplyFormData({ ...applyFormData, fullName: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                        placeholder="Enter your full name"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                        Email Address <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        value={applyFormData.email}
-                        onChange={(e) => setApplyFormData({ ...applyFormData, email: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                        placeholder="your.email@example.com"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Row 2: Phone & Country Preference */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                        Phone Number <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        value={applyFormData.phone}
-                        onChange={(e) => setApplyFormData({ ...applyFormData, phone: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                        placeholder="+91 98765 43210"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                        Country Preference <span className="text-red-500">*</span>
-                      </label>
-                      <SearchableCountrySelect
-                        required
-                        value={applyFormData.countryPreference}
-                        onChange={(val) => setApplyFormData({ ...applyFormData, countryPreference: val })}
-                        placeholder="Select Country Preference"
-                        variant="blue"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Row 3: Course Interested & Qualification */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                        Course Interested <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={applyFormData.courseInterested}
-                        onChange={(e) => setApplyFormData({ ...applyFormData, courseInterested: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                        placeholder="e.g., MBA, Computer Science"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                        Highest Qualification <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        required
-                        value={applyFormData.qualification}
-                        onChange={(e) => setApplyFormData({ ...applyFormData, qualification: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                      >
-                        <option value="">Select Qualification</option>
-                        <option value="High School">High School</option>
-                        <option value="Diploma">Diploma</option>
-                        <option value="Bachelor's Degree">Bachelor's Degree</option>
-                        <option value="Master's Degree">Master's Degree</option>
-                        <option value="PhD">PhD</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Row 4: Upload Documents */}
-                  <div>
-                    <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                      Upload Documents (Optional)
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="file"
-                        id="documents"
-                        onChange={(e) => setApplyFormData({ ...applyFormData, documents: e.target.files?.[0] || null })}
-                        className="hidden"
-                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                      />
-                      <label
-                        htmlFor="documents"
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-gray-900 bg-white cursor-pointer hover:border-[#2b2d72] transition-all flex items-center gap-3"
-                      >
-                        <Upload className="w-5 h-5 text-[#2b2d72]" />
-                        <span className="text-sm font-medium">
-                          {applyFormData.documents ? applyFormData.documents.name : 'Click to upload transcripts, resume, or certificates'}
-                        </span>
-                      </label>
-                      <p className="text-xs text-gray-500 mt-2">Supported formats: PDF, DOC, DOCX, JPG, PNG (Max 5MB)</p>
-                    </div>
-                  </div>
-
-                  {/* Row 5: Message */}
-                  <div>
-                    <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                      Additional Message
-                    </label>
-                    <textarea
-                      rows={4}
-                      value={applyFormData.message}
-                      onChange={(e) => setApplyFormData({ ...applyFormData, message: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium resize-none"
-                      placeholder="Tell us about your study goals, academic background, or any questions..."
-                    />
-                  </div>
-
-                  {/* Submit Button */}
-                  <button
-                    type="submit"
-                    className="w-full py-4 bg-[#2b2d72] hover:bg-[#1a1d4a] text-white rounded-xl font-bold text-base shadow-lg shadow-[#2b2d72]/20 hover:shadow-xl hover:shadow-[#2b2d72]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
-                  >
-                    <Send className="w-5 h-5" />
-                    Submit Application
-                  </button>
-
-                  <p className="text-xs text-center text-gray-500">
-                    🔒 Your information is secure and will be used only for application processing
-                  </p>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Footer */}
-      <footer className="bg-[#0F172A] py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-white/60 text-[14px]">
-            © 2024 StudyAbroad Pro. Your trusted partner for studying in New Zealand.
-          </p>
-        </div>
-      </footer>
+      <CountryApplicationModal
+        isOpen={isEnquiryOpen}
+        onClose={() => setIsEnquiryOpen(false)}
+        countryName="New Zealand"
+        mode="apply"
+      />
     </div>
   );
 }
+
+
+

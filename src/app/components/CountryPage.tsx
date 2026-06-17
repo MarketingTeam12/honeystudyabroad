@@ -23,6 +23,7 @@ import {
   ArrowRight,
   MapPin
 } from 'lucide-react';
+import { CountryApplicationModal } from './CountryApplicationModal';
 
 interface University {
   name: string;
@@ -73,6 +74,7 @@ interface CountryPageProps {
 
 export function CountryPage({ countryData }: CountryPageProps) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [isApplicationOpen, setIsApplicationOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -129,11 +131,11 @@ Message: ${formData.message}`;
 
             <div className="flex flex-wrap gap-4">
               <button
-                onClick={() => document.getElementById('consultation-form')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => setIsApplicationOpen(true)}
                 className="bg-[#F4C430] text-[#0A2472] px-8 py-4 rounded-lg hover:bg-white transition-all font-semibold text-lg flex items-center gap-2 shadow-xl"
               >
                 <Send className="w-5 h-5" />
-                Get Free Consultation
+                Apply Now
               </button>
               <a
                 href="https://wa.me/917299005577?text=Hello!%20I%20want%20to%20study%20in%20USA"
@@ -560,6 +562,13 @@ Message: ${formData.message}`;
           </div>
         </div>
       </section>
+
+      <CountryApplicationModal
+        isOpen={isApplicationOpen}
+        onClose={() => setIsApplicationOpen(false)}
+        countryName={countryData.name}
+        mode="apply"
+      />
     </div>
   );
 }

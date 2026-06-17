@@ -204,6 +204,15 @@
     line-height: 1.5;
   }
 
+  :where(h1, h2, h3, h4, h5, h6, p, span, li, label, a, small, strong, b, em, td, th, dt, dd, figcaption, blockquote) {
+    cursor: pointer;
+  }
+
+  nav :is(a, button, [role='button']),
+  header :is(a, button, [role='button']) {
+    cursor: pointer;
+  }
+
   input {
     font-size: var(--text-base);
     font-weight: var(--font-weight-normal);

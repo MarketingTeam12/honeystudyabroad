@@ -2,6 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import { getUniversityDetailUrl } from '../utils/universityUtils';
 import { goToCountries, goToHome } from '../utils/rootNavigation';
 import { getCommonsImageUrl } from '../utils/imageUtils';
+import { HeaderBrandLogo } from './HeaderBrandLogo';
+import { CountryAdmissionTimeline } from './CountryAdmissionTimeline';
+import { CountryApplicationModal } from './CountryApplicationModal';
 import {
   ArrowLeft,
   MessageCircle,
@@ -50,7 +53,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 
-type AccordionSection = 'document-checklist' | 'visa-process' | 'intakes' | 'cost-living' | 'faq' | 'funds-requirement' | 'ielts-waiver' | 'offer-letter' | 'ug-pg-admission' | 'law-admission' | 'ihs' | null;
+type AccordionSection = 'document-checklist' | 'admission-process' | 'visa-process' | 'intakes' | 'cost-living' | 'faq' | 'funds-requirement' | 'ielts-waiver' | 'offer-letter' | 'ug-pg-admission' | 'law-admission' | 'ihs' | null;
 
 export function UKPage() {
   const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
@@ -685,15 +688,10 @@ export function UKPage() {
       {/* Premium Navbar */}
       <nav className="bg-white/80 backdrop-blur-lg border-b border-[#E5E9F2] sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#2b2d72] to-[#2b2d72] rounded-lg flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-white" />
-              </div>
-              <div className="text-[22px] font-bold bg-orange-500 hover:bg-orange-600 bg-clip-text text-transparent">
-                StudyAbroad Pro
-              </div>
-            </div>
+          <div className="flex items-center justify-between h-[92px]">
+            <button type="button" onClick={goToHome} className="flex items-center group">
+              <HeaderBrandLogo className="group-hover:scale-105 transition-transform" />
+            </button>
             <div className="flex items-center gap-8">
               <a
                 href="/#home"
@@ -1918,11 +1916,11 @@ export function UKPage() {
                 </div>
               </button>
 
-              <div
-                className={`overflow-hidden transition-all duration-500 ${
-                  activeAccordion === 'faq' ? 'max-h-[1500px] opacity-100' : 'max-h-0 opacity-0'
-                }`}
-              >
+            <div
+              className={`overflow-hidden transition-all duration-500 ${
+                activeAccordion === 'faq' ? 'max-h-[1500px] opacity-100' : 'max-h-0 opacity-0'
+              }`}
+            >
                 <div className="p-6 pt-0 border-t border-[#E5E9F2]">
                   <div className="space-y-4 mt-6">
                     {faqs.map((faq, index) => (
@@ -1939,6 +1937,8 @@ export function UKPage() {
               </div>
             </div>
           </div>
+
+          <CountryAdmissionTimeline countryName="UK" sectionId="admission-process" />
         </div>
       </section>
 
@@ -2376,100 +2376,16 @@ export function UKPage() {
         <MessageCircle className="w-8 h-8" />
       </a>
 
-      {/* Enquiry Popup */}
-      {isEnquiryOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-8 relative shadow-2xl border border-gray-100">
-            <button
-              onClick={() => setIsEnquiryOpen(false)}
-              className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-all"
-            >
-              <span className="text-[24px]">×</span>
-            </button>
-
-            <div className="w-16 h-16 bg-[#2b2d72] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#2b2d72]/25">
-              <GraduationCap className="w-8 h-8 text-white" />
-            </div>
-
-            <div className="mb-6 text-center">
-              <h3 className="text-3xl font-bold text-[#2b2d72] mb-2">Send Enquiry</h3>
-              <p className="text-gray-500 text-sm">
-                Our expert counselors will contact you within 24 hours
-              </p>
-            </div>
-
-            <form onSubmit={handleFormSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">Full Name *</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                    placeholder="Enter your name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">Email *</label>
-                  <input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                    placeholder="your.email@example.com"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">Phone *</label>
-                  <input
-                    type="tel"
-                    required
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                    placeholder="+91 98765 43210"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">Course</label>
-                  <input
-                    type="text"
-                    value={formData.course}
-                    onChange={(e) => setFormData({ ...formData, course: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                    placeholder="e.g., MBA, Computer Science"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">Message</label>
-                <textarea
-                  rows={4}
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium resize-none"
-                  placeholder="Tell us about your study plans..."
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-4 bg-[#2b2d72] hover:bg-[#1a1d4a] text-white rounded-xl font-bold text-base shadow-lg shadow-[#2b2d72]/20 hover:shadow-xl hover:shadow-[#2b2d72]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                <Send className="w-5 h-5" />
-                Submit Enquiry
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+      <CountryApplicationModal
+        isOpen={isEnquiryOpen}
+        onClose={() => setIsEnquiryOpen(false)}
+        countryName="UK"
+        mode="apply"
+      />
     </div>
   );
 }
+
+
+
+

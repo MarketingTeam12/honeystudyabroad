@@ -41,8 +41,18 @@ export function Navigation({ onEnquiryClick, activePage = 'home' }: NavigationPr
 
   const servicesRef = useRef<HTMLDivElement>(null);
   const countriesRef = useRef<HTMLDivElement>(null);
+  const servicesCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const countriesCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const closeMenus = () => {
+    if (servicesCloseTimerRef.current) {
+      clearTimeout(servicesCloseTimerRef.current);
+      servicesCloseTimerRef.current = null;
+    }
+    if (countriesCloseTimerRef.current) {
+      clearTimeout(countriesCloseTimerRef.current);
+      countriesCloseTimerRef.current = null;
+    }
     setIsMenuOpen(false);
     setIsServicesOpen(false);
     setIsCountriesOpen(false);
@@ -160,18 +170,74 @@ export function Navigation({ onEnquiryClick, activePage = 'home' }: NavigationPr
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (servicesRef.current && !servicesRef.current.contains(event.target as Node)) {
+        if (servicesCloseTimerRef.current) {
+          clearTimeout(servicesCloseTimerRef.current);
+          servicesCloseTimerRef.current = null;
+        }
         setIsServicesOpen(false);
       }
       if (countriesRef.current && !countriesRef.current.contains(event.target as Node)) {
+        if (countriesCloseTimerRef.current) {
+          clearTimeout(countriesCloseTimerRef.current);
+          countriesCloseTimerRef.current = null;
+        }
         setIsCountriesOpen(false);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      if (servicesCloseTimerRef.current) {
+        clearTimeout(servicesCloseTimerRef.current);
+        servicesCloseTimerRef.current = null;
+      }
+      if (countriesCloseTimerRef.current) {
+        clearTimeout(countriesCloseTimerRef.current);
+        countriesCloseTimerRef.current = null;
+      }
+    };
   }, []);
 
   const isActive = (page: string) => activePage === page;
+
+  const openServicesMenu = () => {
+    if (servicesCloseTimerRef.current) {
+      clearTimeout(servicesCloseTimerRef.current);
+      servicesCloseTimerRef.current = null;
+    }
+    setIsServicesOpen(true);
+    setIsCountriesOpen(false);
+  };
+
+  const closeServicesMenu = () => {
+    if (servicesCloseTimerRef.current) {
+      clearTimeout(servicesCloseTimerRef.current);
+    }
+    servicesCloseTimerRef.current = setTimeout(() => {
+      setIsServicesOpen(false);
+      servicesCloseTimerRef.current = null;
+    }, 120);
+  };
+
+  const openCountriesMenu = () => {
+    if (countriesCloseTimerRef.current) {
+      clearTimeout(countriesCloseTimerRef.current);
+      countriesCloseTimerRef.current = null;
+    }
+    setIsCountriesOpen(true);
+    setIsServicesOpen(false);
+  };
+
+  const closeCountriesMenu = () => {
+    if (countriesCloseTimerRef.current) {
+      clearTimeout(countriesCloseTimerRef.current);
+    }
+    countriesCloseTimerRef.current = setTimeout(() => {
+      setIsCountriesOpen(false);
+      countriesCloseTimerRef.current = null;
+    }, 120);
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md z-50 border-b border-gray-200 shadow-sm">
@@ -209,7 +275,12 @@ export function Navigation({ onEnquiryClick, activePage = 'home' }: NavigationPr
               About
             </button>
 
-            <div ref={servicesRef} className="relative flex items-center gap-1">
+            <div
+              ref={servicesRef}
+              className="relative flex items-center gap-1"
+              onMouseEnter={openServicesMenu}
+              onMouseLeave={closeServicesMenu}
+            >
               <button
                 type="button"
                 onClick={() => void navigateToHomeSection('services')}
@@ -225,7 +296,7 @@ export function Navigation({ onEnquiryClick, activePage = 'home' }: NavigationPr
                 type="button"
                 onClick={(event) => {
                   event.stopPropagation();
-                  setIsServicesOpen(!isServicesOpen);
+                  setIsServicesOpen((current) => !current);
                   setIsCountriesOpen(false);
                 }}
                 className={`flex items-center transition-colors ${
@@ -239,7 +310,11 @@ export function Navigation({ onEnquiryClick, activePage = 'home' }: NavigationPr
               </button>
 
               {isServicesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-[280px] bg-white rounded-lg shadow-[0px_12px_32px_rgba(0,0,0,0.15)] border-t-[3px] border-[#F4C430] overflow-hidden animate-slideDown">
+                <div
+                  className="absolute top-full left-0 mt-2 w-[280px] bg-white rounded-lg shadow-[0px_12px_32px_rgba(0,0,0,0.15)] border-t-[3px] border-[#F4C430] overflow-hidden animate-slideDown"
+                  onMouseEnter={openServicesMenu}
+                  onMouseLeave={closeServicesMenu}
+                >
                   {services.map((service) => (
                     <button
                       type="button"
@@ -257,7 +332,12 @@ export function Navigation({ onEnquiryClick, activePage = 'home' }: NavigationPr
               )}
             </div>
 
-            <div ref={countriesRef} className="relative flex items-center gap-1">
+            <div
+              ref={countriesRef}
+              className="relative flex items-center gap-1"
+              onMouseEnter={openCountriesMenu}
+              onMouseLeave={closeCountriesMenu}
+            >
               <button
                 type="button"
                 onClick={() => void navigateToHomeSection('countries')}
@@ -273,7 +353,7 @@ export function Navigation({ onEnquiryClick, activePage = 'home' }: NavigationPr
                 type="button"
                 onClick={(event) => {
                   event.stopPropagation();
-                  setIsCountriesOpen(!isCountriesOpen);
+                  setIsCountriesOpen((current) => !current);
                   setIsServicesOpen(false);
                 }}
                 className={`flex items-center transition-colors ${
@@ -287,7 +367,11 @@ export function Navigation({ onEnquiryClick, activePage = 'home' }: NavigationPr
               </button>
 
               {isCountriesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-[360px] bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-[#E5E9F2] overflow-hidden animate-slideDown">
+                <div
+                  className="absolute top-full left-0 mt-2 w-[360px] bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-[#E5E9F2] overflow-hidden animate-slideDown"
+                  onMouseEnter={openCountriesMenu}
+                  onMouseLeave={closeCountriesMenu}
+                >
                   <div className="p-2">
                     <div className="grid grid-cols-2 gap-2">
                       {countries.map((country) => (

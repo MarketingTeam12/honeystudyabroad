@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { getUniversityDetailUrl } from '../utils/universityUtils';
 import { goToHome } from '../utils/rootNavigation';
 import { getCommonsImageUrl } from '../utils/imageUtils';
+import { HeaderBrandLogo } from './HeaderBrandLogo';
+import { CountryApplicationModal } from './CountryApplicationModal';
 import {
   GraduationCap, Users, Globe, TrendingUp, Shield, ChevronDown, ChevronUp,
   MapPin, Star, Calendar, CheckCircle, Phone, Mail, MessageCircle,
@@ -115,17 +117,11 @@ export function GermanyPage() {
       {/* Premium Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-b border-gray-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex justify-between items-center h-[92px]">
             {/* Logo */}
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#000000] via-[#DD0000] to-[#FFCE00] rounded-xl flex items-center justify-center shadow-lg">
-                <GraduationCap className="w-7 h-7 text-white" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold text-gray-900">Study Germany</span>
-                <span className="text-xs text-gray-500">Your Path to Excellence</span>
-              </div>
-            </div>
+            <button type="button" onClick={handleGoHome} className="flex items-center group">
+              <HeaderBrandLogo className="group-hover:scale-105 transition-transform" />
+            </button>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-8">
@@ -597,38 +593,38 @@ export function GermanyPage() {
               {[
                 {
                   step: '1',
-                  title: 'Profile Evaluation',
-                  description: 'Free assessment of your academic profile and university recommendations',
-                  icon: Target
+                  title: 'Document Preparation',
+                  description: 'We help you prepare, organize, and verify all required academic and supporting documents.',
+                  icon: FileText
                 },
                 {
                   step: '2',
                   title: 'University Selection',
-                  description: 'Choose from 400+ universities based on your preferences and eligibility',
+                  description: 'We shortlist the best-fit universities based on your course goals, profile, and budget.',
                   icon: Building2
                 },
                 {
                   step: '3',
-                  title: 'Document Preparation',
-                  description: 'Complete guidance on required documents, translations, and certifications',
-                  icon: FileText
+                  title: 'Application Submission',
+                  description: 'We submit your application through Uni-Assist or directly to the selected university.',
+                  icon: CheckCircle
                 },
                 {
                   step: '4',
-                  title: 'Application Submission',
-                  description: 'Apply through Uni-Assist or directly to universities with our support',
-                  icon: CheckCircle
+                  title: 'Profile Evaluation',
+                  description: 'We review your academic profile and suggest the right admission route for Germany.',
+                  icon: Target
                 },
                 {
                   step: '5',
                   title: 'Blocked Account Setup',
-                  description: 'Assistance with opening blocked account (€11,208 for visa)',
+                  description: 'Assistance with opening your blocked account for visa requirements and fund proof.',
                   icon: Euro
                 },
                 {
                   step: '6',
                   title: 'Visa Processing',
-                  description: 'Complete visa support with document verification and appointment booking',
+                  description: 'Complete visa support with document verification, appointment booking, and follow-up.',
                   icon: Shield
                 }
               ].map((item, index) => (
@@ -1220,81 +1216,12 @@ export function GermanyPage() {
         <MessageCircle className="w-8 h-8" />
       </a>
 
-      {/* Enquiry Popup */}
-      {isEnquiryOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl relative border border-gray-100">
-            <button
-              onClick={() => setIsEnquiryOpen(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-all"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-[#2b2d72] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#2b2d72]/25">
-                <GraduationCap className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-3xl font-bold text-[#2b2d72] mb-2">Quick Enquiry</h3>
-              <p className="text-gray-500 text-sm">We'll get back to you within 24 hours</p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label htmlFor="name" className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                  Full Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Enter your full name"
-                  required
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                  Email Address <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="your.email@example.com"
-                  required
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                />
-              </div>
-              <div>
-                <label htmlFor="phone" className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                  Phone Number <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  placeholder="+91 98765 43210"
-                  required
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full py-4 bg-[#2b2d72] hover:bg-[#1a1d4a] text-white rounded-xl font-bold text-base shadow-lg shadow-[#2b2d72]/20 hover:shadow-xl hover:shadow-[#2b2d72]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                Submit Enquiry
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+      <CountryApplicationModal
+        isOpen={isEnquiryOpen}
+        onClose={() => setIsEnquiryOpen(false)}
+        countryName="Germany"
+        mode="apply"
+      />
     </div>
   );
 }

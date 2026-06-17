@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { getCommonsImageUrl } from '../utils/imageUtils';
 import { getUniversityDetailUrl } from '../utils/universityUtils';
+import { CountryAdmissionTimeline } from './CountryAdmissionTimeline';
+import { HeaderBrandLogo } from './HeaderBrandLogo';
+import { CountryApplicationModal } from './CountryApplicationModal';
 import melbourneImage from '@/imports/Melbourne.jpg';
 import australiaImage from '@/imports/Australia.jpg';
 import {
@@ -285,18 +288,10 @@ export function AustraliaPage() {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl shadow-lg z-50 border-b border-[#E5E9F2]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex justify-between items-center h-[92px]">
             {/* Logo */}
             <a href="/#home" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#1E40AF] to-[#3B82F6] rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Globe className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <span className="block text-xl font-bold bg-orange-500 hover:bg-orange-600 bg-clip-text text-transparent">
-                  Study Abroad
-                </span>
-                <span className="block text-xs text-gray-600">Your Global Education Partner</span>
-              </div>
+              <HeaderBrandLogo className="group-hover:scale-105 transition-transform" />
             </a>
 
             {/* Desktop Menu */}
@@ -1073,81 +1068,6 @@ export function AustraliaPage() {
             </div>
           </div>
 
-          {/* Admission Process */}
-          <div id="admission-process" className="bg-[#EEF4FF] backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-gray-100 scroll-mt-24">
-            <button
-              onClick={() => toggleAccordion('admission-process')}
-              className="w-full px-8 py-6 flex justify-between items-center hover:bg-gradient-to-r hover:from-[#EFF6FF] hover:to-[#DBEAFE] transition-all"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-xl flex items-center justify-center">
-                  <GraduationCap className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-[#2b2d72]">Australia Admission Process</h3>
-              </div>
-              {activeAccordion === 'admission-process' ? (
-                <ChevronUp className="w-6 h-6 text-[#2b2d72]" />
-              ) : (
-                <ChevronDown className="w-6 h-6 text-gray-600" />
-              )}
-            </button>
-
-            <div
-              className={`transition-all duration-500 ease-in-out ${
-                activeAccordion === 'admission-process'
-                  ? 'max-h-[2000px] opacity-100'
-                  : 'max-h-0 opacity-0 overflow-hidden'
-              }`}
-            >
-              <div className="px-8 pb-8">
-                <div className="space-y-6">
-                  {[
-                    {
-                      step: 'Step 1',
-                      title: 'Research & Shortlist',
-                      description: 'Research universities, courses, and entry requirements. Shortlist 5-8 universities',
-                      color: 'from-[#2b2d72] to-[#2b2d72]'
-                    },
-                    {
-                      step: 'Step 2',
-                      title: 'Prepare Documents',
-                      description: 'Gather all required documents including transcripts, English tests, and references',
-                      color: 'from-[#8B5CF6] to-[#7C3AED]'
-                    },
-                    {
-                      step: 'Step 3',
-                      title: 'Submit Applications',
-                      description: 'Apply through university portals or agents. Application fees: AUD 50-150',
-                      color: 'from-[#10B981] to-[#059669]'
-                    },
-                    {
-                      step: 'Step 4',
-                      title: 'Receive Offer Letter',
-                      description: 'Receive conditional/unconditional offer. Accept and pay deposit',
-                      color: 'from-[#F59E0B] to-[#D97706]'
-                    },
-                    {
-                      step: 'Step 5',
-                      title: 'Get CoE',
-                      description: 'Receive Confirmation of Enrollment (CoE) after fee payment',
-                      color: 'from-[#EC4899] to-[#DB2777]'
-                    }
-                  ].map((stage, index) => (
-                    <div key={index} className="flex gap-4">
-                      <div className={`w-16 h-16 bg-gradient-to-br ${stage.color} rounded-xl flex items-center justify-center text-white font-bold flex-shrink-0`}>
-                        {index + 1}
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="text-lg font-bold text-[#2b2d72] mb-2">{stage.title}</h4>
-                        <p className="text-gray-600">{stage.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Student Visa Process */}
           <div id="visa-process" className="bg-[#EEF4FF] backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-gray-100 scroll-mt-24">
             <button
@@ -1679,6 +1599,159 @@ export function AustraliaPage() {
               </div>
             </div>
           </div>
+
+          {/* Admission Process */}
+          {false && (
+          <div id="admission-process" className="bg-[#EEF4FF] backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-gray-100 scroll-mt-24">
+            <button
+              onClick={() => toggleAccordion('admission-process')}
+              className="w-full px-8 py-6 flex justify-between items-center hover:bg-gradient-to-r hover:from-[#EFF6FF] hover:to-[#DBEAFE] transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-xl flex items-center justify-center">
+                  <GraduationCap className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#2b2d72]">Australia Admission Process</h3>
+              </div>
+              {activeAccordion === 'admission-process' ? (
+                <ChevronUp className="w-6 h-6 text-[#2b2d72]" />
+              ) : (
+                <ChevronDown className="w-6 h-6 text-gray-600" />
+              )}
+            </button>
+
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                activeAccordion === 'admission-process'
+                  ? 'max-h-[2000px] opacity-100'
+                  : 'max-h-0 opacity-0 overflow-hidden'
+              }`}
+            >
+              <div className="px-8 pb-8">
+                <div className="space-y-6">
+                  {[
+                    {
+                      step: 'Step 1',
+                      title: 'Research & Shortlist',
+                      description: 'Research universities, courses, and entry requirements. Shortlist 5-8 universities',
+                      color: 'from-[#2b2d72] to-[#2b2d72]'
+                    },
+                    {
+                      step: 'Step 2',
+                      title: 'Prepare Documents',
+                      description: 'Gather all required documents including transcripts, English tests, and references',
+                      color: 'from-[#8B5CF6] to-[#7C3AED]'
+                    },
+                    {
+                      step: 'Step 3',
+                      title: 'Submit Applications',
+                      description: 'Apply through university portals or agents. Application fees: AUD 50-150',
+                      color: 'from-[#10B981] to-[#059669]'
+                    },
+                    {
+                      step: 'Step 4',
+                      title: 'Receive Offer Letter',
+                      description: 'Receive conditional/unconditional offer. Accept and pay deposit',
+                      color: 'from-[#F59E0B] to-[#D97706]'
+                    },
+                    {
+                      step: 'Step 5',
+                      title: 'Get CoE',
+                      description: 'Receive Confirmation of Enrollment (CoE) after fee payment',
+                      color: 'from-[#EC4899] to-[#DB2777]'
+                    }
+                  ].map((stage, index) => (
+                    <div key={index} className="flex gap-4">
+                      <div className={`w-16 h-16 bg-gradient-to-br ${stage.color} rounded-xl flex items-center justify-center text-white font-bold flex-shrink-0`}>
+                        {index + 1}
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-lg font-bold text-[#2b2d72] mb-2">{stage.title}</h4>
+                        <p className="text-gray-600">{stage.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          )}
+
+          {/* Admission Process */}
+          <div id="admission-process" className="bg-[#EEF4FF] backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-gray-100 scroll-mt-24">
+            <button
+              onClick={() => toggleAccordion('admission-process')}
+              className="w-full px-8 py-6 flex justify-between items-center hover:bg-gradient-to-r hover:from-[#EFF6FF] hover:to-[#DBEAFE] transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-xl flex items-center justify-center">
+                  <GraduationCap className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#2b2d72]">Australia Admission Process</h3>
+              </div>
+              {activeAccordion === 'admission-process' ? (
+                <ChevronUp className="w-6 h-6 text-[#2b2d72]" />
+              ) : (
+                <ChevronDown className="w-6 h-6 text-gray-600" />
+              )}
+            </button>
+
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                activeAccordion === 'admission-process'
+                  ? 'max-h-[2000px] opacity-100'
+                  : 'max-h-0 opacity-0 overflow-hidden'
+              }`}
+            >
+              <div className="px-8 pb-8">
+                <div className="space-y-6">
+                  {[
+                    {
+                      step: 'Step 1',
+                      title: 'Research & Shortlist',
+                      description: 'Research universities, courses, and entry requirements. Shortlist 5-8 universities',
+                      color: 'from-[#2b2d72] to-[#2b2d72]'
+                    },
+                    {
+                      step: 'Step 2',
+                      title: 'Prepare Documents',
+                      description: 'Gather all required documents including transcripts, English tests, and references',
+                      color: 'from-[#8B5CF6] to-[#7C3AED]'
+                    },
+                    {
+                      step: 'Step 3',
+                      title: 'Submit Applications',
+                      description: 'Apply through university portals or agents. Application fees: AUD 50-150',
+                      color: 'from-[#10B981] to-[#059669]'
+                    },
+                    {
+                      step: 'Step 4',
+                      title: 'Receive Offer Letter',
+                      description: 'Receive conditional/unconditional offer. Accept and pay deposit',
+                      color: 'from-[#F59E0B] to-[#D97706]'
+                    },
+                    {
+                      step: 'Step 5',
+                      title: 'Get CoE',
+                      description: 'Receive Confirmation of Enrollment (CoE) after fee payment',
+                      color: 'from-[#EC4899] to-[#DB2777]'
+                    }
+                  ].map((stage, index) => (
+                    <div key={index} className="flex gap-4">
+                      <div className={`w-16 h-16 bg-gradient-to-br ${stage.color} rounded-xl flex items-center justify-center text-white font-bold flex-shrink-0`}>
+                        {index + 1}
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-lg font-bold text-[#2b2d72] mb-2">{stage.title}</h4>
+                        <p className="text-gray-600">{stage.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1815,80 +1888,14 @@ export function AustraliaPage() {
         <MessageCircle className="w-8 h-8" />
       </a>
 
-      {/* Enquiry Popup */}
-      {isEnquiryOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl relative border border-gray-100">
-            <button
-              onClick={() => setIsEnquiryOpen(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-all"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
-            <div className="w-16 h-16 bg-[#2b2d72] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#2b2d72]/25">
-              <GraduationCap className="w-8 h-8 text-white" />
-            </div>
-
-            <h3 className="text-3xl font-bold text-[#2b2d72] mb-2 text-center">Quick Enquiry</h3>
-            <p className="text-gray-500 text-sm mb-6 text-center">Fill in your details and we'll get back to you soon</p>
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label htmlFor="name" className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                  Full Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Enter your full name"
-                  required
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                  Email Address <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="your.email@example.com"
-                  required
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                />
-              </div>
-              <div>
-                <label htmlFor="phone" className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                  Phone Number <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  placeholder="+91 98765 43210"
-                  required
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full py-4 bg-[#2b2d72] hover:bg-[#1a1d4a] text-white rounded-xl font-bold text-base shadow-lg shadow-[#2b2d72]/20 hover:shadow-xl hover:shadow-[#2b2d72]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                Submit Enquiry
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+      <CountryApplicationModal
+        isOpen={isEnquiryOpen}
+        onClose={() => setIsEnquiryOpen(false)}
+        countryName="Australia"
+        mode="apply"
+      />
     </div>
   );
 }
+
+

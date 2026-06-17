@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { getUniversityDetailUrl } from '../utils/universityUtils';
 import { goToCountries, goToHome } from '../utils/rootNavigation';
+import { HeaderBrandLogo } from './HeaderBrandLogo';
+import { CountryAdmissionTimeline } from './CountryAdmissionTimeline';
+import { CountryApplicationModal } from './CountryApplicationModal';
 import munichImage from '@/imports/munich.jpg';
 import {
   ArrowLeft,
@@ -475,15 +478,10 @@ export function EuropePage() {
       {/* Premium Navbar */}
       <nav className="bg-[#EEF4FF] backdrop-blur-lg border-b border-[#E5E9F2] sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#1E40AF] to-[#3B82F6] rounded-lg flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-white" />
-              </div>
-              <div className="text-[22px] font-bold bg-gradient-to-r from-[#1E40AF] to-[#3B82F6] bg-clip-text text-transparent">
-                StudyAbroad Pro
-              </div>
-            </div>
+          <div className="flex items-center justify-between h-[92px]">
+            <button type="button" onClick={goToHome} className="flex items-center group">
+              <HeaderBrandLogo className="group-hover:scale-105 transition-transform" />
+            </button>
             <div className="hidden md:flex items-center gap-8">
               <a
                 href="/#home"
@@ -586,7 +584,7 @@ export function EuropePage() {
 
               
               <button
-                onClick={() => window.dispatchEvent(new Event('openEnquiry'))}
+                onClick={() => setIsEnquiryOpen(true)}
                 className="px-6 py-2.5 bg-gradient-to-r from-[#1E40AF] to-[#3B82F6] text-white rounded-lg font-semibold text-[14px] hover:shadow-lg transition-all"
               >
                 Free Counseling
@@ -671,7 +669,7 @@ export function EuropePage() {
                   Apply Now
                 </button>
                 <button
-                  onClick={() => window.dispatchEvent(new Event('openEnquiry'))}
+                  onClick={() => setIsEnquiryOpen(true)}
                   className="px-8 py-4 bg-gradient-to-r from-[#1E40AF] to-[#3B82F6] text-white rounded-xl font-semibold text-[16px] hover:shadow-2xl transition-all flex items-center gap-2 hover:-translate-y-1"
                 >
                   <Send className="w-5 h-5" />
@@ -1080,42 +1078,7 @@ export function EuropePage() {
         </div>
       </section>
 
-      {/* Admission Process */}
-      <section id="admission-process" className="py-20 bg-gradient-to-b from-[#F8FAFC] to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="inline-block px-4 py-2 bg-[#EFF6FF] rounded-full text-[#2b2d72] font-semibold text-[13px] mb-4">
-              APPLICATION GUIDE
-            </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold text-[#0F172A] leading-tight mb-4">
-              Admission Process
-            </h2>
-            <p className="text-gray-600 text-base sm:text-lg">
-              Simple steps to secure your admission in European universities
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {admissionProcess.map((step, index) => {
-              const Icon = step.icon;
-              return (
-                <div
-                  key={index}
-                  className="bg-white rounded-2xl p-6 border border-[#E5E9F2] hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
-                >
-                  <div className="w-12 h-12 bg-gradient-to-br from-[#1E40AF] to-[#3B82F6] rounded-xl flex items-center justify-center mb-4">
-                    <Icon className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="text-[#2b2d72] font-bold text-[14px] mb-2">Step {index + 1}</div>
-                  <h3 className="text-[18px] font-bold text-[#0F172A] mb-2">{step.step}</h3>
-                  <p className="text-gray-600 text-[14px]">{step.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
+      <CountryAdmissionTimeline countryName="Europe" sectionId="admission-process" />
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-br from-[#1E40AF] to-[#3B82F6]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -1128,7 +1091,7 @@ export function EuropePage() {
 
           <div className="flex flex-wrap gap-4 justify-center">
             <button
-              onClick={() => window.dispatchEvent(new Event('openEnquiry'))}
+              onClick={() => setIsEnquiryOpen(true)}
               className="px-8 py-4 bg-white text-[#2b2d72] rounded-xl font-semibold text-[16px] hover:shadow-2xl transition-all flex items-center gap-2 hover:-translate-y-1"
             >
               <Send className="w-5 h-5" />
@@ -1275,197 +1238,16 @@ export function EuropePage() {
         <MessageCircle className="w-8 h-8" />
       </a>
 
-      {/* Apply Now Modal */}
-      {isApplyNowOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl p-8 max-w-3xl w-full shadow-2xl relative border border-gray-200 my-8">
-            <button
-              onClick={() => setIsApplyNowOpen(false)}
-              className="absolute top-6 right-6 text-gray-400 hover:text-red-600 transition-colors z-10"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-[#2b2d72] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#2b2d72]/25">
-                <GraduationCap className="w-8 h-8 text-white" />
-              </div>
-              <h2 className="text-3xl font-bold text-[#2b2d72] mb-2">Apply Now – Europe</h2>
-              <p className="text-gray-600 text-sm">Complete the form below to start your application process</p>
-            </div>
-
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                const subject = encodeURIComponent('Europe Application - ' + applyFormData.fullName);
-                const body = encodeURIComponent(
-                  `Full Name: ${applyFormData.fullName}\nEmail: ${applyFormData.email}\nPhone: ${applyFormData.phone}\nCountry Preference: ${applyFormData.countryPreference}\nCourse Interested: ${applyFormData.courseInterested}\nQualification: ${applyFormData.qualification}\n\nMessage:\n${applyFormData.message}`
-                );
-                window.location.href = `mailto:salesteam@honeytranslations.com?subject=${subject}&body=${body}`;
-              }}
-              className="space-y-6"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                    Full Name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={applyFormData.fullName}
-                    onChange={(e) => setApplyFormData({ ...applyFormData, fullName: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                    placeholder="Enter your full name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                    Email Address <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={applyFormData.email}
-                    onChange={(e) => setApplyFormData({ ...applyFormData, email: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                    placeholder="your.email@example.com"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                    Phone Number <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    value={applyFormData.phone}
-                    onChange={(e) => setApplyFormData({ ...applyFormData, phone: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                    placeholder="+91 98765 43210"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                    Country Preference <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    required
-                    value={applyFormData.countryPreference}
-                    onChange={(e) => setApplyFormData({ ...applyFormData, countryPreference: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                  >
-                    <option value="Europe">Europe (Multiple Countries)</option>
-                    <option value="Germany">Germany</option>
-                    <option value="France">France</option>
-                    <option value="Netherlands">Netherlands</option>
-                    <option value="Sweden">Sweden</option>
-                    <option value="Spain">Spain</option>
-                    <option value="Italy">Italy</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                    Course Interested <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={applyFormData.courseInterested}
-                    onChange={(e) => setApplyFormData({ ...applyFormData, courseInterested: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                    placeholder="e.g., MSc Engineering"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                    Highest Qualification <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    required
-                    value={applyFormData.qualification}
-                    onChange={(e) => setApplyFormData({ ...applyFormData, qualification: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all font-medium"
-                  >
-                    <option value="">Select Qualification</option>
-                    <option value="High School">High School</option>
-                    <option value="Diploma">Diploma</option>
-                    <option value="Bachelor's Degree">Bachelor's Degree</option>
-                    <option value="Master's Degree">Master's Degree</option>
-                    <option value="PhD">PhD</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                  Upload Documents (Optional)
-                </label>
-                <div className="relative">
-                  <input
-                    type="file"
-                    id="documents-europe"
-                    onChange={(e) => setApplyFormData({ ...applyFormData, documents: e.target.files?.[0] || null })}
-                    className="hidden"
-                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                  />
-                  <label
-                    htmlFor="documents-europe"
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-700 cursor-pointer hover:border-[#2b2d72] transition-all flex items-center gap-3"
-                  >
-                    <Upload className="w-5 h-5 text-[#2b2d72]" />
-                    <span className="text-sm font-medium">
-                      {applyFormData.documents ? applyFormData.documents.name : 'Click to upload transcripts, resume, or certificates'}
-                    </span>
-                  </label>
-                  <p className="text-xs text-gray-500 mt-2">Supported formats: PDF, DOC, DOCX, JPG, PNG (Max 5MB)</p>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[#2b2d72] font-semibold mb-2 text-sm">
-                  Additional Message
-                </label>
-                <textarea
-                  rows={4}
-                  value={applyFormData.message}
-                  onChange={(e) => setApplyFormData({ ...applyFormData, message: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#2b2d72] focus:ring-4 focus:ring-[#2b2d72]/10 transition-all resize-none font-medium"
-                  placeholder="Tell us about your study goals, academic background, or any questions..."
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-4 bg-[#2b2d72] hover:bg-[#1a1d4a] text-white rounded-xl font-bold text-base shadow-lg shadow-[#2b2d72]/20 hover:shadow-xl hover:shadow-[#2b2d72]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                <Send className="w-5 h-5" />
-                Submit Application
-              </button>
-
-              <p className="text-xs text-center text-gray-500">
-                🔒 Your information is secure and will be used only for application processing
-              </p>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Footer */}
-      <footer className="bg-[#0F172A] py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-white/60 text-[14px]">
-            © 2024 StudyAbroad Pro. Your trusted partner for studying in Europe.
-          </p>
-        </div>
-      </footer>
+      <CountryApplicationModal
+        isOpen={isEnquiryOpen}
+        onClose={() => setIsEnquiryOpen(false)}
+        countryName="Europe"
+        mode="apply"
+      />
     </div>
   );
 }
+
+
+
+
