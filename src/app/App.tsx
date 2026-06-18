@@ -321,7 +321,7 @@ function UniversityLogos() {
           {UNIVERSITIES.map(name => (
             <span
               key={name}
-              className="text-gray-300 font-extrabold text-[13px] sm:text-[14px] hover:text-[#2b2d72] transition-colors cursor-default select-none"
+              className="text-[#2b2d72] font-extrabold text-[13px] sm:text-[14px] transition-all duration-300 cursor-pointer select-none hover:text-[#F4A430] hover:-translate-y-0.5 hover:scale-[1.03]"
             >
               {name}
             </span>
@@ -486,8 +486,8 @@ function CtaSection({ onEnquiryClick }: { onEnquiryClick: () => void }) {
         style={{ backgroundImage: 'radial-gradient(circle, white 2px, transparent 2px)', backgroundSize: '30px 30px' }}
       />
       <div className="relative max-w-4xl mx-auto px-4 text-center">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl mb-6 text-4xl border border-white/20">
-          ✈️
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl mb-6 border border-white/20">
+          <Globe size={30} className="text-white" />
         </div>
         <h2 className="text-2xl sm:text-3xl lg:text-[2.5rem] font-extrabold text-white mb-4 leading-tight">
           Ready to Begin Your
@@ -508,7 +508,7 @@ function CtaSection({ onEnquiryClick }: { onEnquiryClick: () => void }) {
             href="tel:+917299005577"
             className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-sm px-8 py-4 rounded-xl font-extrabold text-sm sm:text-base transition-all hover:scale-105 active:scale-95"
           >
-            <Phone size={18} /> Call +91&nbsp;7299005577
+            <Phone size={18} /> +91&nbsp;7299005577
           </a>
         </div>
       </div>

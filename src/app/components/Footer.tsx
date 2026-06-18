@@ -95,9 +95,9 @@ export function Footer() {
                   +91 7299005577
                 </a>
               </li>
-              <li className="flex items-start gap-3">
+              <li className="flex items-center gap-3">
                 <Mail className="mt-0.5 h-4 w-4 flex-shrink-0 text-orange-400" />
-                <a href="mailto:salesteam@honeytranslations.com" className="break-all text-[15px] text-white/90 transition-colors hover:text-orange-300">
+                <a href="mailto:salesteam@honeytranslations.com" className="whitespace-nowrap text-[15px] text-white/90 transition-colors hover:text-orange-300">
                   salesteam@honeytranslations.com
                 </a>
               </li>
